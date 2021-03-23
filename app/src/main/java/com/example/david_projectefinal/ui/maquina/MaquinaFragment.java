@@ -1,10 +1,16 @@
 package com.example.david_projectefinal.ui.maquina;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +20,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
+
+import java.net.URI;
 
 public class MaquinaFragment extends Fragment {
     Context context;
@@ -55,7 +65,7 @@ public class MaquinaFragment extends Fragment {
     ////////////////
 
     //Image views
-    ImageView addMaquina,deleteMaquina;
+    ImageView addMaquina,deleteMaquina,imageTrucada;
     public static BuidemDataSource bd;
     Context mycontext;
     public static adapterTodoIcon dataAdapter;
@@ -73,6 +83,21 @@ public class MaquinaFragment extends Fragment {
         deleteMaquina = (ImageView)myview.findViewById(R.id.imgdelete123);
         implementacioListView(myview);
         addMaquinaButon();
+        final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (ContextCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                        Manifest.permission.CALL_PHONE)) {
+
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                }
+            }
+        }
         return myview;
     }
 
@@ -85,7 +110,7 @@ public class MaquinaFragment extends Fragment {
         numF = numSerie;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("¿Estas segur que vols eliminar el producte amb el codi: " + idF + " de nom " + nomF + " i amb número de serie " + numF + "?");
+                builder.setMessage("¿Estas segur que vols eliminar la màquina amb el codi: " + idF + " amb el nom de client " + nomF + " i amb número de serie " + numF + "?");
                 builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -95,7 +120,6 @@ public class MaquinaFragment extends Fragment {
                     }
                 });
                 builder.setNegativeButton("No", null);
-
                 builder.show();
 
     }
@@ -172,6 +196,7 @@ public class MaquinaFragment extends Fragment {
         Maquina.setView(v).setPositiveButton("Afegir Màquina", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 String nom = etNom.getText().toString();
                 String adreça = etDir.getText().toString();
                 String codiPos = etCodiPos.getText().toString();
@@ -285,6 +310,16 @@ public class MaquinaFragment extends Fragment {
         dataAdapter.changeCursor(cursorMaquines);
         dataAdapter.notifyDataSetChanged();
     }
+    public void ferTrucada(long id)
+    {
+
+        Cursor updateMaquina = bd.agafarMaquinaUna(id);
+        updateMaquina.moveToFirst();
+
+        String tlfon = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tlfM));
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(tlfon));
+        startActivity(intent);
+    }
 }
 class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
 
@@ -301,6 +336,7 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
 
+        ImageView imageTrucada = (ImageView)view.findViewById(R.id.imgTlf);
         ImageView botoEliminarProducte = (ImageView)view.findViewById(R.id.imgdelete123);
         botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -308,6 +344,18 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
                 aTiconProduct.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)),parent);
+            }
+        });
+        imageTrucada.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Carrego la linia del cursor de la posició.
+                Cursor linia = (Cursor) getItem(position);
+
+
+
+
+
+                aTiconProduct.ferTrucada(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
             }
         });
 
