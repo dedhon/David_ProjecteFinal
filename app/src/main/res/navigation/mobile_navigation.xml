@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_maquina">
+
+    <fragment
+        android:id="@+id/navigation_maquina"
+        android:name="com.example.david_projectefinal.ui.maquina.MaquinaFragment"
+        android:label="Maquines"
+        tools:layout="@layout/fragment_maquina" />
+
+    <fragment
+        android:id="@+id/navigation_tipus"
+        android:name="com.example.david_projectefinal.ui.tipus.TipusFragment"
+        android:label="Tipus"
+        tools:layout="@layout/fragment_tipus" />
+
+    <fragment
+        android:id="@+id/navigation_zona"
+        android:name="com.example.david_projectefinal.ui.zona.zonaFragment"
+        android:label="Zones"
+        tools:layout="@layout/fragment_zona" />
+    <fragment
+        android:id="@+id/navigation_maps"
+        android:name="com.example.david_projectefinal.ui.maps.maps"
+        android:label="Maps"
+        tools:layout="@layout/fragment_maps" />
+</navigation>

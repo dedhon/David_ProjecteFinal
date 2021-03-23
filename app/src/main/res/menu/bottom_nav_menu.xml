@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_maquina"
+        android:icon="@drawable/maquinaicon"
+        android:title="Maquines" />
+
+    <item
+        android:id="@+id/navigation_tipus"
+        android:icon="@drawable/tipusicon"
+        android:title="Tipus" />
+
+    <item
+        android:id="@+id/navigation_zona"
+        android:icon="@drawable/zona"
+        android:title="Zones" />
+
+    <item
+        android:id="@+id/navigation_maps"
+        android:icon="@drawable/map"
+        android:title="Maps" />
+
+</menu>
