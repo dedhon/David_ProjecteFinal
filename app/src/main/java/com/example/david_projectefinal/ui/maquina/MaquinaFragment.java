@@ -22,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -36,9 +37,6 @@ import com.example.david_projectefinal.filtratge;
 import java.net.URI;
 import java.util.Calendar;
 
-import sun.bob.mcalendarview.MCalendarView;
-import sun.bob.mcalendarview.listeners.OnDateClickListener;
-import sun.bob.mcalendarview.vo.DateData;
 
 public class MaquinaFragment extends Fragment {
     Context context;
@@ -79,7 +77,7 @@ public class MaquinaFragment extends Fragment {
     public static BuidemDataSource bd;
     Context mycontext;
     public static adapterTodoIcon dataAdapter;
-    MCalendarView calendarView ;
+
     ListView listView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -232,20 +230,55 @@ public class MaquinaFragment extends Fragment {
         Maquina.setView(v1).setPositiveButton("Afegir Màquina", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                int codiConvert=0;
 
                 String nom = etNom.getText().toString();
+                if (nom.trim().equals("")) {
+                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String adreça = etDir.getText().toString();
+                if (adreça.trim().equals("")) {
+                    Toast.makeText(getContext(),"L'adreça és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String codiPos = etCodiPos.getText().toString();
-                int codiConvert = Integer.parseInt(codiPos);
+
+                if (codiPos.trim().equals("")) {
+                    Toast.makeText(getContext(),"El codi postal és obligatori!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else{
+                    codiConvert = Integer.parseInt(codiPos);
+                }
                 String pob = etPobl.getText().toString();
+                if (pob.trim().equals("")) {
+                    Toast.makeText(getContext(),"La població és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String tlf = etTlf.getText().toString();
                 String email = etEmail.getText().toString();
                 String numser = etNumSer.getText().toString();
+                if (numser.trim().equals("")) {
+                    Toast.makeText(getContext(),"El número de serie és obligatori!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String data = etData.getText().toString();
                 String tips = etTipus.getText().toString();
+                if (tips.trim().equals("")) {
+                    Toast.makeText(getContext(),"El tipus és obligatori!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String zons = etZona.getText().toString();
-                bd.addMaquina(nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
-                actualitzarProductes();
+                if (zons.trim().equals("")) {
+                    Toast.makeText(getContext(),"La zona és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                    bd.addMaquina(nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
+                    actualitzarProductes();
+
             }
         });
         Maquina.setNegativeButton("Cancelar", null);
