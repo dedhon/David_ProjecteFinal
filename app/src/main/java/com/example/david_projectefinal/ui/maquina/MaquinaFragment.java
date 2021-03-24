@@ -1,8 +1,10 @@
 package com.example.david_projectefinal.ui.maquina;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -31,10 +34,16 @@ import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
 
 import java.net.URI;
+import java.util.Calendar;
+
+import sun.bob.mcalendarview.MCalendarView;
+import sun.bob.mcalendarview.listeners.OnDateClickListener;
+import sun.bob.mcalendarview.vo.DateData;
 
 public class MaquinaFragment extends Fragment {
     Context context;
     static String nom, numSerie;
+    String dataFINAL;
     private filtratge filtreAplicat;
     //Contingut adapter per listview
     String[] columnesMaquina = new String[]{
@@ -70,7 +79,7 @@ public class MaquinaFragment extends Fragment {
     public static BuidemDataSource bd;
     Context mycontext;
     public static adapterTodoIcon dataAdapter;
-
+    MCalendarView calendarView ;
     ListView listView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -173,28 +182,54 @@ public class MaquinaFragment extends Fragment {
         });
     }
 
+    public void data(View v)
+    {
+        Calendar cal = Calendar.getInstance();
+        int any = cal.get(Calendar.YEAR);
+        int mes = cal.get(Calendar.MONTH);
+        int dia = cal.get(Calendar.DAY_OF_MONTH);
+        final EditText etData = v.findViewById(R.id.etData);
+        DatePickerDialog dpd = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                int monthaux = month + 1;
+                dataFINAL = dayOfMonth + "-" + monthaux + "-" + year;
+                etData.setEnabled(false);
+                etData.setText(dataFINAL);
+            }
+        }, any, mes, dia);
+        dpd.show();
+    }
     public void dialogAddMaquina() {
 
         AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        View v = inflater.inflate(R.layout.addmaquina, null);
-
-        ImageView calendar = (ImageView) v.findViewById(R.id.imageViewData);
+        View v1 = inflater.inflate(R.layout.addmaquina, null);
+        final EditText etData = v1.findViewById(R.id.etData);
+        etData.setEnabled(false);
+        ImageView calendar = (ImageView) v1.findViewById(R.id.imageViewData);
         Glide.with(getContext()).load(R.drawable.cal).into(calendar);
+        calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data(v1);
+            }
+        });
 
-        final EditText etNom = v.findViewById(R.id.etNom);
-        final EditText etDir = v.findViewById(R.id.etDir);
-        final EditText etCodiPos = v.findViewById(R.id.etCodiPostal);
-        final EditText etPobl = v.findViewById(R.id.etPoblacio);
-        final EditText etTlf = v.findViewById(R.id.etTelefon);
-        final EditText etEmail = v.findViewById(R.id.etEmail);
-        final EditText etNumSer = v.findViewById(R.id.etNumSer);
-        final EditText etData = v.findViewById(R.id.etData);
-        final EditText etTipus = v.findViewById(R.id.etTipus);
-        final EditText etZona = v.findViewById(R.id.etZona);
+        final EditText etNom = v1.findViewById(R.id.etNom);
+        final EditText etDir = v1.findViewById(R.id.etDir);
+        final EditText etCodiPos = v1.findViewById(R.id.etCodiPostal);
+        final EditText etPobl = v1.findViewById(R.id.etPoblacio);
+        final EditText etTlf = v1.findViewById(R.id.etTelefon);
+        final EditText etEmail = v1.findViewById(R.id.etEmail);
+        final EditText etNumSer = v1.findViewById(R.id.etNumSer);
 
-        Maquina.setView(v).setPositiveButton("Afegir Màquina", new DialogInterface.OnClickListener() {
+        final EditText etTipus = v1.findViewById(R.id.etTipus);
+        final EditText etZona = v1.findViewById(R.id.etZona);
+
+
+        Maquina.setView(v1).setPositiveButton("Afegir Màquina", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -225,39 +260,45 @@ public class MaquinaFragment extends Fragment {
         AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        View v = inflater.inflate(R.layout.addmaquina, null);
+        View v2 = inflater.inflate(R.layout.addmaquina, null);
 
-        ImageView calendar = (ImageView) v.findViewById(R.id.imageViewData);
+        ImageView calendar = (ImageView) v2.findViewById(R.id.imageViewData);
         Glide.with(getContext()).load(R.drawable.cal).into(calendar);
-
+        calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data(v2);
+            }
+        });
         Cursor updateMaquina = bd.agafarMaquinaUna(id);
         updateMaquina.moveToFirst();
 
-        final EditText etNom = v.findViewById(R.id.etNom);
+        final EditText etNom = v2.findViewById(R.id.etNom);
         etNom.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.nomM)));
-        final EditText etDir = v.findViewById(R.id.etDir);
+        final EditText etDir = v2.findViewById(R.id.etDir);
         etDir.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.adreçaM)));
-        final EditText etCodiPos = v.findViewById(R.id.etCodiPostal);
+        final EditText etCodiPos = v2.findViewById(R.id.etCodiPostal);
         etCodiPos.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.codiPostalM)));
-        final EditText etPobl = v.findViewById(R.id.etPoblacio);
+        final EditText etPobl = v2.findViewById(R.id.etPoblacio);
         etPobl.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.poblacioM)));
-        final EditText etTlf = v.findViewById(R.id.etTelefon);
+        final EditText etTlf = v2.findViewById(R.id.etTelefon);
         etTlf.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tlfM)));
-        final EditText etEmail = v.findViewById(R.id.etEmail);
+        final EditText etEmail = v2.findViewById(R.id.etEmail);
         etEmail.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.emailM)));
-        final EditText etNumSer = v.findViewById(R.id.etNumSer);
+        final EditText etNumSer = v2.findViewById(R.id.etNumSer);
         etNumSer.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.numM)));
-        final EditText etData = v.findViewById(R.id.etData);
+        final EditText etData = v2.findViewById(R.id.etData);
         etData.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.dataM)));
         etData.setEnabled(false);
-        final EditText etTipus = v.findViewById(R.id.etTipus);
+        final EditText etTipus = v2.findViewById(R.id.etTipus);
         etTipus.setEnabled(false);
         etTipus.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tipusForeign)));
-        final EditText etZona = v.findViewById(R.id.etZona);
+        final EditText etZona = v2.findViewById(R.id.etZona);
         etZona.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.zonaForeign)));
         etZona.setEnabled(false);
-
-        Maquina.setView(v).setPositiveButton("Modificar Màquina", new DialogInterface.OnClickListener() {
+        etData.setEnabled(false);
+        etData.setText(dataFINAL);
+        Maquina.setView(v2).setPositiveButton("Modificar Màquina", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -332,6 +373,7 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
 
+        ImageView imageEmail = (ImageView) view.findViewById(R.id.imgEmail);
         ImageView imageTrucada = (ImageView) view.findViewById(R.id.imgTlf);
         ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete123);
         botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
@@ -348,10 +390,29 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 ferTrucada(v, position);
             }
         });
+        imageEmail.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Carrego la linia del cursor de la posició.
+                enviarEmail(position);
+            }
+        });
 
         return view;
     }
-
+    public void enviarEmail(int position) {
+        Cursor linia = (Cursor) getItem(position);
+        Cursor updateMaquina = aTiconProduct.bd.agafarMaquinaUna(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
+        updateMaquina.moveToFirst();
+        String sEmail = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.emailM));
+        String sNums = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.numM));
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.putExtra(Intent.EXTRA_EMAIL, new String[]{sEmail});
+        email.putExtra(Intent.EXTRA_SUBJECT, "“Propera revisió màquina nº " + sNums);
+        //email.putExtra(Intent.EXTRA_TEXT, "message");
+        email.setType("message/rfc822");
+        aTiconProduct.startActivity(Intent.createChooser(email, "Choose an Email client :"));
+       // aTiconProduct.startActivity(email);
+    }
     public void ferTrucada(View v, int position) {
         Cursor linia = (Cursor) getItem(position);
         Cursor updateMaquina = aTiconProduct.bd.agafarMaquinaUna(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
