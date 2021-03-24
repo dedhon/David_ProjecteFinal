@@ -1,6 +1,7 @@
 package com.example.david_projectefinal.ui.maquina;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,10 +34,10 @@ import java.net.URI;
 
 public class MaquinaFragment extends Fragment {
     Context context;
-    static  String  nom, numSerie;
+    static String nom, numSerie;
     private filtratge filtreAplicat;
     //Contingut adapter per listview
-    String[] columnesMaquina = new String[] {
+    String[] columnesMaquina = new String[]{
             BuidemDataSource.iD,
             BuidemDataSource.nomM,
             BuidemDataSource.adreçaM,
@@ -49,7 +50,7 @@ public class MaquinaFragment extends Fragment {
             BuidemDataSource.tipusForeign,
             BuidemDataSource.zonaForeign
     };
-    int[] toMaquina = new int[] {
+    int[] toMaquina = new int[]{
             R.id.lblId,
             R.id.lblNomCli,
             R.id.lblAdreça,
@@ -65,7 +66,7 @@ public class MaquinaFragment extends Fragment {
     ////////////////
 
     //Image views
-    ImageView addMaquina,deleteMaquina,imageTrucada;
+    ImageView addMaquina, deleteMaquina, imageTrucada;
     public static BuidemDataSource bd;
     Context mycontext;
     public static adapterTodoIcon dataAdapter;
@@ -80,7 +81,7 @@ public class MaquinaFragment extends Fragment {
         View myview = inflater.inflate(R.layout.fragment_maquina, container, false);
 
         filtreAplicat = filtratge.FILTRE_TOT;
-        deleteMaquina = (ImageView)myview.findViewById(R.id.imgdelete123);
+        deleteMaquina = (ImageView) myview.findViewById(R.id.imgdelete123);
         implementacioListView(myview);
         addMaquinaButon();
         final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 0;
@@ -101,44 +102,42 @@ public class MaquinaFragment extends Fragment {
         return myview;
     }
 
-    public void deleteMaquina(long idF,ViewGroup parent)
-    {
+    public void deleteMaquina(long idF, ViewGroup parent) {
         context = parent.getContext();
         bdCursorDelete(idF);
-        String nomF,numF;
+        String nomF, numF;
         nomF = nom;
         numF = numSerie;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("¿Estas segur que vols eliminar la màquina amb el codi: " + idF + " amb el nom de client " + nomF + " i amb número de serie " + numF + "?");
-                builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+        builder.setMessage("¿Estas segur que vols eliminar la màquina amb el codi: " + idF + " amb el nom de client " + nomF + " i amb número de serie " + numF + "?");
+        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
 
-                        MaquinaFragment.bdEliminar(idF);
-                        filtreAplicat = filtratge.FILTRE_TOT;
-                        actualitzarProductes();
-                    }
-                });
-                builder.setNegativeButton("No", null);
-                builder.show();
+                MaquinaFragment.bdEliminar(idF);
+                filtreAplicat = filtratge.FILTRE_TOT;
+                actualitzarProductes();
+            }
+        });
+        builder.setNegativeButton("No", null);
+        builder.show();
 
     }
-    private static void bdCursorDelete(long idF)
-    {
+
+    private static void bdCursorDelete(long idF) {
         Cursor cur = bd.agafarMaquinaUna(idF);
         cur.moveToFirst();
         nom = cur.getString(cur.getColumnIndex(BuidemDataSource.nomM));
         numSerie = cur.getString(cur.getColumnIndex(BuidemDataSource.numM));
 
     }
-    private static void bdEliminar(long idF)
-    {
+
+    private static void bdEliminar(long idF) {
         bd.eliminarMaquina(idF);
     }
 
 
-    public void addMaquinaButon()
-    {
+    public void addMaquinaButon() {
         addMaquina.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,10 +145,10 @@ public class MaquinaFragment extends Fragment {
             }
         });
     }
-    public void implementacioListView(View myview)
-    {
+
+    public void implementacioListView(View myview) {
         //Definim una imatge per aplicarli amb el GLIDE un GIF a la imatge
-        addMaquina = (ImageView)myview.findViewById(R.id.imageAddMaquina);
+        addMaquina = (ImageView) myview.findViewById(R.id.imageAddMaquina);
         Glide.with(getContext()).load(R.drawable.addmac).into(addMaquina);
         //Instanciem el listView
         listView = (ListView) myview.findViewById(R.id.list1);
@@ -161,7 +160,7 @@ public class MaquinaFragment extends Fragment {
                 cursor,
                 columnesMaquina,
                 toMaquina,
-                1);
+                1, MaquinaFragment.this);
 
         listView.setAdapter(dataAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -169,17 +168,19 @@ public class MaquinaFragment extends Fragment {
             public void onItemClick(AdapterView<?> listView, View view,
                                     int position, long id) {
                 editarAddMaquina(id);
+
             }
         });
     }
-    public void dialogAddMaquina(){
+
+    public void dialogAddMaquina() {
 
         AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
         View v = inflater.inflate(R.layout.addmaquina, null);
 
-        ImageView calendar = (ImageView)v.findViewById(R.id.imageViewData);
+        ImageView calendar = (ImageView) v.findViewById(R.id.imageViewData);
         Glide.with(getContext()).load(R.drawable.cal).into(calendar);
 
         final EditText etNom = v.findViewById(R.id.etNom);
@@ -208,7 +209,7 @@ public class MaquinaFragment extends Fragment {
                 String data = etData.getText().toString();
                 String tips = etTipus.getText().toString();
                 String zons = etZona.getText().toString();
-                bd.addMaquina(nom, adreça, codiConvert, pob,tlf, email,numser,data,tips,zons);
+                bd.addMaquina(nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
                 actualitzarProductes();
             }
         });
@@ -218,14 +219,15 @@ public class MaquinaFragment extends Fragment {
 
 
     }
-    public void editarAddMaquina(long id){
+
+    public void editarAddMaquina(long id) {
 
         AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
         View v = inflater.inflate(R.layout.addmaquina, null);
 
-        ImageView calendar = (ImageView)v.findViewById(R.id.imageViewData);
+        ImageView calendar = (ImageView) v.findViewById(R.id.imageViewData);
         Glide.with(getContext()).load(R.drawable.cal).into(calendar);
 
         Cursor updateMaquina = bd.agafarMaquinaUna(id);
@@ -270,7 +272,7 @@ public class MaquinaFragment extends Fragment {
                 String data = etData.getText().toString();
                 String tips = etTipus.getText().toString();
                 String zons = etZona.getText().toString();
-                bd.updateMaquina(id,nom, adreça, codiConvert, pob,tlf, email,numser,data,tips,zons);
+                bd.updateMaquina(id, nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
                 actualitzarProductes();
             }
         });
@@ -280,6 +282,7 @@ public class MaquinaFragment extends Fragment {
 
 
     }
+
     private void actualitzarProductes() {
 
         // Demanem totes les tasques
@@ -291,7 +294,7 @@ public class MaquinaFragment extends Fragment {
                 cursorMaquines = bd.mostrarAllMaquines();
                 break;
             case FILTRE_NOM:
-               // cursorMaquines = bd.filtreNomesDescripcio();
+                // cursorMaquines = bd.filtreNomesDescripcio();
                 break;
             case FILTRE_ADREÇA:
                 //cursorMaquines = bd.filtreStockMesPetitZeroOigual();
@@ -310,17 +313,9 @@ public class MaquinaFragment extends Fragment {
         dataAdapter.changeCursor(cursorMaquines);
         dataAdapter.notifyDataSetChanged();
     }
-    public void ferTrucada(long id)
-    {
 
-        Cursor updateMaquina = bd.agafarMaquinaUna(id);
-        updateMaquina.moveToFirst();
-
-        String tlfon = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tlfM));
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(tlfon));
-        startActivity(intent);
-    }
 }
+
 class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
 
     private static final String colorTaskPending = "#F04C4C";
@@ -328,37 +323,42 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
 
     private MaquinaFragment aTiconProduct;
 
-    public adapterTodoIcon(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
+    public adapterTodoIcon(Context context, int layout, Cursor c, String[] from, int[] to, int flags, MaquinaFragment frag) {
         super(context, layout, c, from, to, flags);
-        aTiconProduct = new MaquinaFragment();
+        aTiconProduct = frag;
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
 
-        ImageView imageTrucada = (ImageView)view.findViewById(R.id.imgTlf);
-        ImageView botoEliminarProducte = (ImageView)view.findViewById(R.id.imgdelete123);
+        ImageView imageTrucada = (ImageView) view.findViewById(R.id.imgTlf);
+        ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete123);
         botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
-                aTiconProduct.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)),parent);
+                aTiconProduct.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
             }
         });
         imageTrucada.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Carrego la linia del cursor de la posició.
-                Cursor linia = (Cursor) getItem(position);
-
-
-
-
-
-                aTiconProduct.ferTrucada(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
+                ferTrucada(v, position);
             }
         });
 
         return view;
+    }
+
+    public void ferTrucada(View v, int position) {
+        Cursor linia = (Cursor) getItem(position);
+        Cursor updateMaquina = aTiconProduct.bd.agafarMaquinaUna(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
+        updateMaquina.moveToFirst();
+        String tlfon = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tlfM));
+        Intent i = new Intent(Intent.ACTION_CALL);
+        i.setData(Uri.parse("tel:" + tlfon));
+        aTiconProduct.startActivity(i);
     }
 }
