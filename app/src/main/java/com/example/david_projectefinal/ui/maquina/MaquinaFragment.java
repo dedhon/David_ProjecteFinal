@@ -18,10 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +33,8 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
+import com.example.david_projectefinal.MainActivity;
+import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
 
@@ -70,6 +74,18 @@ public class MaquinaFragment extends Fragment {
             R.id.lblTipus,
             R.id.lblZona
     };
+    private static int ACTIVITY_TASK_ADD = 1;
+    private static int ACTIVITY_TASK_UPDATE = 2;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTIVITY_TASK_ADD) {
+                // Carreguem tots els productes
+                actualitzarProductes();
+        }
+        if (requestCode == ACTIVITY_TASK_UPDATE) {
+                actualitzarProductes();
+        }
+    }
     ////////////////
 
     //Image views
@@ -90,7 +106,7 @@ public class MaquinaFragment extends Fragment {
         filtreAplicat = filtratge.FILTRE_TOT;
         deleteMaquina = (ImageView) myview.findViewById(R.id.imgdelete123);
         implementacioListView(myview);
-        addMaquinaButon();
+        addMaquinaButon(myview);
         final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (ContextCompat.checkSelfPermission(getContext(),
@@ -144,7 +160,7 @@ public class MaquinaFragment extends Fragment {
     }
 
 
-    public void addMaquinaButon() {
+    public void addMaquinaButon(View v) {
         addMaquina.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,7 +214,13 @@ public class MaquinaFragment extends Fragment {
         }, any, mes, dia);
         dpd.show();
     }
-    public void dialogAddMaquina() {
+    public void dialogAddMaquina()
+    {
+        Intent intent = new Intent(getActivity(), MaquinaaddClass.class);
+        startActivityForResult(intent,ACTIVITY_TASK_ADD);
+
+    }
+    public void dialogAddMaquina1111() {
 
         AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
@@ -276,8 +298,11 @@ public class MaquinaFragment extends Fragment {
                     return;
                 }
 
-                    bd.addMaquina(nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
-                    actualitzarProductes();
+                bd.addMaquina(nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
+                actualitzarProductes();
+
+
+
 
             }
         });
@@ -305,7 +330,8 @@ public class MaquinaFragment extends Fragment {
         });
         Cursor updateMaquina = bd.agafarMaquinaUna(id);
         updateMaquina.moveToFirst();
-
+        TextView titol = (TextView)v2.findViewById(R.id.logoAlert);
+        titol.setText("Actualitzar màquina");
         final EditText etNom = v2.findViewById(R.id.etNom);
         etNom.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.nomM)));
         final EditText etDir = v2.findViewById(R.id.etDir);

@@ -136,5 +136,16 @@
         android:hint="Zona"
         android:inputType="text" />
 
+    <ImageView
+        android:id="@+id/btnAceptar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+    <ImageView
+        android:id="@+id/btnCancelar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
 </LinearLayout>
     </ScrollView>
