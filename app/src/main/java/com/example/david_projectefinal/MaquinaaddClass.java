@@ -1,12 +1,14 @@
 package com.example.david_projectefinal;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,9 +23,12 @@ import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.ui.maquina.MaquinaFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Calendar;
+
 public class MaquinaaddClass extends AppCompatActivity {
+    String dataFINAL="";
     public BuidemDataSource bd;
-     EditText etData;
+    EditText etData;
     EditText etNom;
     EditText etDir ;
     EditText etCodiPos;
@@ -33,15 +38,18 @@ public class MaquinaaddClass extends AppCompatActivity {
     EditText etNumSer;
     EditText etTipus;
     EditText etZona;
-    ImageView aceptar,cancel;
+    ImageView aceptar,cancel,calendar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addmaquina);
+        bd = new BuidemDataSource(this);
         aceptar = findViewById(R.id.btnAceptar);
         cancel = findViewById(R.id.btnCancelar);
+        calendar = findViewById(R.id.imageViewData);
+        Glide.with(MaquinaaddClass.this).load(R.drawable.validaric).into(aceptar);
         Glide.with(MaquinaaddClass.this).load(R.drawable.iccancel).into(cancel);
-        Glide.with(MaquinaaddClass.this).load(R.drawable.iccancel).into(cancel);
+        Glide.with(MaquinaaddClass.this).load(R.drawable.cal).into(calendar);
         etNom = findViewById(R.id.etNom);
         etDir = findViewById(R.id.etDir);
         etCodiPos = findViewById(R.id.etCodiPostal);
@@ -55,7 +63,12 @@ public class MaquinaaddClass extends AppCompatActivity {
         dialogAddMaquina();
     }
     public void dialogAddMaquina() {
-
+        calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data();
+            }
+        });
          aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +100,11 @@ public class MaquinaaddClass extends AppCompatActivity {
 
                 String tlf = etTlf.getText().toString();
                 String email = etEmail.getText().toString();
+                if (!email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+"))
+                {
+                    Toast.makeText(MaquinaaddClass.this, "No has introduit un email valid, torna a probar ", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 String numser = etNumSer.getText().toString();
                 if (numser.trim().equals("")) {
                     Toast.makeText(MaquinaaddClass.this,"El número de serie és obligatori!!", Toast.LENGTH_SHORT).show();
@@ -111,5 +129,31 @@ public class MaquinaaddClass extends AppCompatActivity {
                 finish();
             }
         });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent();
+                setResult(RESULT_CANCELED, mIntent);
+                finish();
+            }
+        });
+    }
+    public void data()
+    {
+        Calendar cal = Calendar.getInstance();
+        int any = cal.get(Calendar.YEAR);
+        int mes = cal.get(Calendar.MONTH);
+        int dia = cal.get(Calendar.DAY_OF_MONTH);
+        final EditText etData = findViewById(R.id.etData);
+        DatePickerDialog dpd = new DatePickerDialog(MaquinaaddClass.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                int monthaux = month + 1;
+                dataFINAL = dayOfMonth + "-" + monthaux + "-" + year;
+                etData.setEnabled(false);
+                etData.setText(dataFINAL);
+            }
+        }, any, mes, dia);
+        dpd.show();
     }
 }

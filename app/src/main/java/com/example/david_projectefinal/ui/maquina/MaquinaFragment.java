@@ -1,8 +1,6 @@
 package com.example.david_projectefinal.ui.maquina;
 
 import android.Manifest;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -13,12 +11,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,13 +29,13 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
-import com.example.david_projectefinal.MainActivity;
 import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
 
-import java.net.URI;
 import java.util.Calendar;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class MaquinaFragment extends Fragment {
@@ -79,11 +75,18 @@ public class MaquinaFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTIVITY_TASK_ADD) {
+            if(resultCode==RESULT_OK)
+            {
                 // Carreguem tots els productes
-                actualitzarProductes();
+                actualitzarMaquines();
+            }
+
         }
         if (requestCode == ACTIVITY_TASK_UPDATE) {
-                actualitzarProductes();
+            if(resultCode==RESULT_OK)
+            {
+                actualitzarMaquines();
+            }
         }
     }
     ////////////////
@@ -139,7 +142,7 @@ public class MaquinaFragment extends Fragment {
 
                 MaquinaFragment.bdEliminar(idF);
                 filtreAplicat = filtratge.FILTRE_TOT;
-                actualitzarProductes();
+                actualitzarMaquines();
             }
         });
         builder.setNegativeButton("No", null);
@@ -218,42 +221,55 @@ public class MaquinaFragment extends Fragment {
     {
         Intent intent = new Intent(getActivity(), MaquinaaddClass.class);
         startActivityForResult(intent,ACTIVITY_TASK_ADD);
-
     }
-    public void dialogAddMaquina1111() {
+
+    public void editarAddMaquina(long id) {
 
         AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        View v1 = inflater.inflate(R.layout.addmaquina, null);
-        final EditText etData = v1.findViewById(R.id.etData);
-        etData.setEnabled(false);
-        ImageView calendar = (ImageView) v1.findViewById(R.id.imageViewData);
+        View v2 = inflater.inflate(R.layout.addmaquina, null);
+
+        ImageView calendar = (ImageView) v2.findViewById(R.id.imageViewData);
         Glide.with(getContext()).load(R.drawable.cal).into(calendar);
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                data(v1);
+                data(v2);
             }
         });
-
-        final EditText etNom = v1.findViewById(R.id.etNom);
-        final EditText etDir = v1.findViewById(R.id.etDir);
-        final EditText etCodiPos = v1.findViewById(R.id.etCodiPostal);
-        final EditText etPobl = v1.findViewById(R.id.etPoblacio);
-        final EditText etTlf = v1.findViewById(R.id.etTelefon);
-        final EditText etEmail = v1.findViewById(R.id.etEmail);
-        final EditText etNumSer = v1.findViewById(R.id.etNumSer);
-
-        final EditText etTipus = v1.findViewById(R.id.etTipus);
-        final EditText etZona = v1.findViewById(R.id.etZona);
-
-
-        Maquina.setView(v1).setPositiveButton("Afegir Màquina", new DialogInterface.OnClickListener() {
+        Cursor updateMaquina = bd.agafarMaquinaUna(id);
+        updateMaquina.moveToFirst();
+        TextView titol = (TextView)v2.findViewById(R.id.idAfegirTipus);
+        titol.setText("Actualitzar màquina");
+        final EditText etNom = v2.findViewById(R.id.etNom);
+        etNom.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.nomM)));
+        final EditText etDir = v2.findViewById(R.id.etDir);
+        etDir.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.adreçaM)));
+        final EditText etCodiPos = v2.findViewById(R.id.etCodiPostal);
+        etCodiPos.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.codiPostalM)));
+        final EditText etPobl = v2.findViewById(R.id.etPoblacio);
+        etPobl.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.poblacioM)));
+        final EditText etTlf = v2.findViewById(R.id.etTelefon);
+        etTlf.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tlfM)));
+        final EditText etEmail = v2.findViewById(R.id.etEmail);
+        etEmail.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.emailM)));
+        final EditText etNumSer = v2.findViewById(R.id.etNumSer);
+        etNumSer.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.numM)));
+        final EditText etData = v2.findViewById(R.id.etData);
+        etData.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.dataM)));
+        etData.setEnabled(false);
+        final EditText etTipus = v2.findViewById(R.id.etTipus);
+        etTipus.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tipusForeign)));
+        final EditText etZona = v2.findViewById(R.id.etZona);
+        etZona.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.zonaForeign)));
+        etData.setEnabled(false);
+        etData.setText(dataFINAL);
+        Maquina.setView(v2).setPositiveButton("Modificar Màquina", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int codiConvert=0;
 
+                int codiConvert=0;
                 String nom = etNom.getText().toString();
                 if (nom.trim().equals("")) {
                     Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
@@ -298,82 +314,8 @@ public class MaquinaFragment extends Fragment {
                     return;
                 }
 
-                bd.addMaquina(nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
-                actualitzarProductes();
-
-
-
-
-            }
-        });
-        Maquina.setNegativeButton("Cancelar", null);
-        AlertDialog dialog = Maquina.create();
-        dialog.show();
-
-
-    }
-
-    public void editarAddMaquina(long id) {
-
-        AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        View v2 = inflater.inflate(R.layout.addmaquina, null);
-
-        ImageView calendar = (ImageView) v2.findViewById(R.id.imageViewData);
-        Glide.with(getContext()).load(R.drawable.cal).into(calendar);
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                data(v2);
-            }
-        });
-        Cursor updateMaquina = bd.agafarMaquinaUna(id);
-        updateMaquina.moveToFirst();
-        TextView titol = (TextView)v2.findViewById(R.id.logoAlert);
-        titol.setText("Actualitzar màquina");
-        final EditText etNom = v2.findViewById(R.id.etNom);
-        etNom.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.nomM)));
-        final EditText etDir = v2.findViewById(R.id.etDir);
-        etDir.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.adreçaM)));
-        final EditText etCodiPos = v2.findViewById(R.id.etCodiPostal);
-        etCodiPos.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.codiPostalM)));
-        final EditText etPobl = v2.findViewById(R.id.etPoblacio);
-        etPobl.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.poblacioM)));
-        final EditText etTlf = v2.findViewById(R.id.etTelefon);
-        etTlf.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tlfM)));
-        final EditText etEmail = v2.findViewById(R.id.etEmail);
-        etEmail.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.emailM)));
-        final EditText etNumSer = v2.findViewById(R.id.etNumSer);
-        etNumSer.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.numM)));
-        final EditText etData = v2.findViewById(R.id.etData);
-        etData.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.dataM)));
-        etData.setEnabled(false);
-        final EditText etTipus = v2.findViewById(R.id.etTipus);
-        etTipus.setEnabled(false);
-        etTipus.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tipusForeign)));
-        final EditText etZona = v2.findViewById(R.id.etZona);
-        etZona.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.zonaForeign)));
-        etZona.setEnabled(false);
-        etData.setEnabled(false);
-        etData.setText(dataFINAL);
-        Maquina.setView(v2).setPositiveButton("Modificar Màquina", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                String nom = etNom.getText().toString();
-                String adreça = etDir.getText().toString();
-                String codiPos = etCodiPos.getText().toString();
-                int codiConvert = Integer.parseInt(codiPos);
-                String pob = etPobl.getText().toString();
-                String tlf = etTlf.getText().toString();
-                String email = etEmail.getText().toString();
-                String numser = etNumSer.getText().toString();
-                String data = etData.getText().toString();
-                String tips = etTipus.getText().toString();
-                String zons = etZona.getText().toString();
                 bd.updateMaquina(id, nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
-                actualitzarProductes();
+                actualitzarMaquines();
             }
         });
         Maquina.setNegativeButton("Cancelar", null);
@@ -383,7 +325,7 @@ public class MaquinaFragment extends Fragment {
 
     }
 
-    private void actualitzarProductes() {
+    private void actualitzarMaquines() {
 
         // Demanem totes les tasques
         Cursor cursorMaquines = bd.mostrarAllMaquines();

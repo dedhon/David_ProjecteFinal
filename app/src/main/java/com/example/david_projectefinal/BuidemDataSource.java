@@ -28,7 +28,7 @@ public class BuidemDataSource {
 
     //Camps de la taula tipus
 
-    public static final String tipusBuidem = "zones";
+    public static final String tipusBuidem = "tipus";
     public static final String nomT = "NomTipus";
 
 
@@ -102,7 +102,20 @@ public class BuidemDataSource {
         values.put(zonaForeign, zons);
         return dbW.insert(MaquinaBuidem, null, values);
     }
+    public long addTipus(String nom) {
+        ContentValues values = new ContentValues();
+        values.put(nomT, nom);
 
+        return dbW.insert(tipusBuidem, null, values);
+    }
+    public Cursor mostrarAllTipus() {
+        return dbR.query(tipusBuidem, new String[]{iD,nomT},
+                null,
+                null,
+                null,
+                null,
+                iD);
+    }
 
 }
 
