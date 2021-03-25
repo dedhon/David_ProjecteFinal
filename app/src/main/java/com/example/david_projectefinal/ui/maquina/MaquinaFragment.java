@@ -70,19 +70,18 @@ public class MaquinaFragment extends Fragment {
             R.id.lblTipus,
             R.id.lblZona
     };
-    private static int ACTIVITY_TASK_ADD = 1;
-    private static int ACTIVITY_TASK_UPDATE = 2;
+    private static int ADD_MAQUINA = 1;
+    private static int UPDATA_MAQUINA = 2;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ACTIVITY_TASK_ADD) {
+        if (requestCode == ADD_MAQUINA) {
             if(resultCode==RESULT_OK)
             {
                 // Carreguem tots els productes
                 actualitzarMaquines();
             }
-
         }
-        if (requestCode == ACTIVITY_TASK_UPDATE) {
+        if (requestCode == UPDATA_MAQUINA) {
             if(resultCode==RESULT_OK)
             {
                 actualitzarMaquines();
@@ -220,7 +219,7 @@ public class MaquinaFragment extends Fragment {
     public void dialogAddMaquina()
     {
         Intent intent = new Intent(getActivity(), MaquinaaddClass.class);
-        startActivityForResult(intent,ACTIVITY_TASK_ADD);
+        startActivityForResult(intent,ADD_MAQUINA);
     }
 
     public void editarAddMaquina(long id) {
