@@ -32,6 +32,7 @@ import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 
@@ -104,11 +105,16 @@ public class MaquinaFragment extends Fragment {
         bd = new BuidemDataSource(getContext());
         //Definim la vista i la inflem amb el fragment de maquina
         View myview = inflater.inflate(R.layout.fragment_maquina, container, false);
-
+        demanarPermisos();
         filtreAplicat = filtratge.FILTRE_TOT;
         deleteMaquina = (ImageView) myview.findViewById(R.id.imgdelete123);
         implementacioListView(myview);
         addMaquinaButon(myview);
+
+        return myview;
+    }
+    public void demanarPermisos()
+    {
         final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (ContextCompat.checkSelfPermission(getContext(),
@@ -124,9 +130,7 @@ public class MaquinaFragment extends Fragment {
                 }
             }
         }
-        return myview;
     }
-
     public void deleteMaquina(long idF, ViewGroup parent) {
         context = parent.getContext();
         bdCursorDelete(idF);
@@ -134,18 +138,26 @@ public class MaquinaFragment extends Fragment {
         nomF = nom;
         numF = numSerie;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("¿Estas segur que vols eliminar la màquina amb el codi: " + idF + " amb el nom de client " + nomF + " i amb número de serie " + numF + "?");
-        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
+        AlertDialog.Builder alertadd = new AlertDialog.Builder(getContext());
+        LayoutInflater factory = LayoutInflater.from(getContext());
+        final View view = factory.inflate(R.layout.sample, null);
+        ImageView segur = (ImageView) view.findViewById(R.id.dialog_imageview);
+        Glide.with(getContext()).load(R.drawable.segurgif).into(segur);
+        alertadd.setView(view);
+        String missatgeAenviar="¿Estas segur que vols eliminar la màquina amb les següents dades:?" + "\n" +
+                "-ID Màquina: " + idF + "\n" +
+                "-Nom client: " + nomF + "\n" +
+                "-Número serie: " + numF;
+        alertadd.setMessage(missatgeAenviar);
+        alertadd.setNeutralButton("Si!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dlg, int sumthin) {
                 MaquinaFragment.bdEliminar(idF);
                 filtreAplicat = filtratge.FILTRE_TOT;
                 actualitzarMaquines();
             }
         });
-        builder.setNegativeButton("No", null);
-        builder.show();
+        alertadd.setNegativeButton("No", null);
+        alertadd.show();
 
     }
 
@@ -218,13 +230,28 @@ public class MaquinaFragment extends Fragment {
     }
     public void dialogAddMaquina()
     {
+        Bundle bundle = new Bundle();
+        long[] idActual = new long[2];
+        idActual[0]=1;
+        idActual[1]=0;
+        bundle.putLongArray("FILTRE",idActual);
         Intent intent = new Intent(getActivity(), MaquinaaddClass.class);
+        intent.putExtras(bundle);
         startActivityForResult(intent,ADD_MAQUINA);
     }
 
     public void editarAddMaquina(long id) {
 
-        AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
+        Bundle bundle = new Bundle();
+        long[] idActual = new long[2];
+        idActual[0]=2;
+        idActual[1]=id;
+        bundle.putLongArray("FILTRE",idActual);
+        Intent intent = new Intent(getActivity(), MaquinaaddClass.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent,UPDATA_MAQUINA);
+
+        /*AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
         View v2 = inflater.inflate(R.layout.addmaquina, null);
@@ -319,7 +346,7 @@ public class MaquinaFragment extends Fragment {
         });
         Maquina.setNegativeButton("Cancelar", null);
         AlertDialog dialog = Maquina.create();
-        dialog.show();
+        dialog.show();*/
 
 
     }
@@ -362,11 +389,11 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
     private static final String colorTaskPending = "#F04C4C";
     private static final String colorTaskCompleted = "#FFFFFF";
 
-    private MaquinaFragment aTiconProduct;
+    private MaquinaFragment aTiconMaquina;
 
     public adapterTodoIcon(Context context, int layout, Cursor c, String[] from, int[] to, int flags, MaquinaFragment frag) {
         super(context, layout, c, from, to, flags);
-        aTiconProduct = frag;
+        aTiconMaquina = frag;
     }
 
     @Override
@@ -381,45 +408,64 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
 
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
-                aTiconProduct.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
+                aTiconMaquina.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
             }
         });
         imageTrucada.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Carrego la linia del cursor de la posició.
-                ferTrucada(v, position);
+                ferTrucada(view, position, aTiconMaquina.getContext());
             }
         });
         imageEmail.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Carrego la linia del cursor de la posició.
-                enviarEmail(position);
+                enviarEmail(view,position,aTiconMaquina.getContext());
             }
         });
 
         return view;
     }
-    public void enviarEmail(int position) {
+    public void enviarEmail(View v,int position,Context context) {
         Cursor linia = (Cursor) getItem(position);
-        Cursor updateMaquina = aTiconProduct.bd.agafarMaquinaUna(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
+        Cursor updateMaquina = aTiconMaquina.bd.agafarMaquinaUna(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
         updateMaquina.moveToFirst();
         String sEmail = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.emailM));
-        String sNums = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.numM));
-        Intent email = new Intent(Intent.ACTION_SEND);
-        email.putExtra(Intent.EXTRA_EMAIL, new String[]{sEmail});
-        email.putExtra(Intent.EXTRA_SUBJECT, "“Propera revisió màquina nº " + sNums);
-        //email.putExtra(Intent.EXTRA_TEXT, "message");
-        email.setType("message/rfc822");
-        aTiconProduct.startActivity(Intent.createChooser(email, "Choose an Email client :"));
-       // aTiconProduct.startActivity(email);
+        if(!sEmail.trim().equals(""))
+        {
+            String sNums = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.numM));
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.putExtra(Intent.EXTRA_EMAIL, new String[]{sEmail});
+            email.putExtra(Intent.EXTRA_SUBJECT, "“Propera revisió màquina nº " + sNums);
+            email.setType("message/rfc822");
+            aTiconMaquina.startActivity(Intent.createChooser(email, "Choose an Email client :"));
+        }
+        else{
+            Toast.makeText(context,"No hi ha e-mail al que enviar un correu!!", Toast.LENGTH_SHORT).show();
+
+        }
     }
-    public void ferTrucada(View v, int position) {
+    public void ferTrucada(View v, int position, Context context) {
         Cursor linia = (Cursor) getItem(position);
-        Cursor updateMaquina = aTiconProduct.bd.agafarMaquinaUna(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
+        Cursor updateMaquina = aTiconMaquina.bd.agafarMaquinaUna(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
         updateMaquina.moveToFirst();
         String tlfon = updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tlfM));
-        Intent i = new Intent(Intent.ACTION_CALL);
-        i.setData(Uri.parse("tel:" + tlfon));
-        aTiconProduct.startActivity(i);
+        if(!tlfon.trim().equals(""))
+        {
+            if(tlfon.length()==9)
+            {
+                Intent i = new Intent(Intent.ACTION_CALL);
+                i.setData(Uri.parse("tel:" + tlfon));
+                aTiconMaquina.startActivity(i);
+            }
+            else{
+                Toast.makeText(context,"La longitud del telefon ha de ser de 9 digits!!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else{
+            Toast.makeText(context,"No hi ha telèfon al que trucar!!", Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 }

@@ -25,8 +25,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
+import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
+import com.example.david_projectefinal.ui.maquina.MaquinaFragment;
 
 
 import java.util.List;
@@ -41,6 +43,7 @@ public class TipusFragment extends Fragment {
             R.id.lblId,
             R.id.lblNomTipu
     };
+    static String nom;
     ListView listView;
     public static adaptadorTipus dataAdapter;
     public static BuidemDataSource bd;
@@ -63,6 +66,7 @@ public class TipusFragment extends Fragment {
         addTipus(root);
         return root;
     }
+
     public void addTipus(View v) {
         addTipus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +83,7 @@ public class TipusFragment extends Fragment {
         View v2 = inflater.inflate(R.layout.add_tipus, null);
 
 
-        final EditText etNomTip = v2.findViewById(R.id.etTipusMaq);
+        final EditText etNomTip = v2.findViewById(R.id.etTipusNom);
         Tipus.setView(v2).setPositiveButton("Afegir Tipus", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -148,11 +152,82 @@ public class TipusFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> listView, View view,
                                     int position, long id) {
-                //editarAddMaquina(id);
+                editarTipus(id);
             }
         });
     }
+    public void editarTipus(long id)
+    {
 
+        AlertDialog.Builder Tipus = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View v2 = inflater.inflate(R.layout.add_tipus, null);
+
+        Cursor updateTipus = bd.agafarTipusUn(id);
+        updateTipus.moveToFirst();
+        TextView titol = (TextView)v2.findViewById(R.id.idAfegirTipus);
+        titol.setText("Actualitzar tipus");
+        final EditText etNom = v2.findViewById(R.id.etTipusNom);
+        etNom.setText(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.nomT)));
+
+        Tipus.setView(v2).setPositiveButton("Modificar Tipus", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                int codiConvert=0;
+                String nom = etNom.getText().toString();
+                if (nom.trim().equals("")) {
+                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                bd.updateTipus(id, nom);
+                actualitzarTipus();
+            }
+        });
+        Tipus.setNegativeButton("Cancelar", null);
+        AlertDialog dialog = Tipus.create();
+        dialog.show();
+
+    }
+
+    private static void bdCursorDelete(long idF) {
+        Cursor cursor = bd.agafarTipusUn(idF);
+        cursor.moveToFirst();
+        nom = cursor.getString(cursor.getColumnIndex(BuidemDataSource.nomT));
+
+    }
+    private static void bdEliminarTipus(long idF) {
+        bd.eliminarTipus(idF);
+    }
+    public void deleteMaquina(long idF, ViewGroup parent) {
+
+        bdCursorDelete(idF);
+        String nomF;
+        nomF = nom;
+
+        AlertDialog.Builder alertadd = new AlertDialog.Builder(getContext());
+        LayoutInflater factory = LayoutInflater.from(getContext());
+        final View view = factory.inflate(R.layout.sample, null);
+        ImageView segur = (ImageView) view.findViewById(R.id.dialog_imageview);
+        Glide.with(getContext()).load(R.drawable.segurgif).into(segur);
+        alertadd.setView(view);
+        String missatgeAenviar="¿Estas segur que vols eliminar el tipus amb les següents dades:?" + "\n" +
+                "-ID Tipus: " + idF + "\n" +
+                "-Nom Tipus: " + nomF + "\n";
+        alertadd.setMessage(missatgeAenviar);
+        alertadd.setNeutralButton("Si!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dlg, int sumthin) {
+                TipusFragment.bdEliminarTipus(idF);
+                filtreAplicat = filtratge.FILTRE_TOT;
+                actualitzarTipus();
+            }
+        });
+        alertadd.setNegativeButton("No", null);
+        alertadd.show();
+
+    }
 }
 class adaptadorTipus extends android.widget.SimpleCursorAdapter {
 
@@ -170,6 +245,15 @@ class adaptadorTipus extends android.widget.SimpleCursorAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
 
+        ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete1234);
+        botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                // Carrego la linia del cursor de la posició.
+                Cursor linia = (Cursor) getItem(position);
+                aTiconTipus.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
+            }
+        });
         return view;
     }
 

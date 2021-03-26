@@ -70,7 +70,7 @@ public class BuidemDataSource {
     }
     //Eliminem maquina amb un id
     public void eliminarMaquina(long id) {
-        // Eliminem el producte amb clau primària "id"
+
         dbW.delete(MaquinaBuidem,iD + " = ?", new String[] { String.valueOf(id) });
     }
     //Actualitzem les dades d'una maquina amb el id
@@ -102,6 +102,13 @@ public class BuidemDataSource {
         values.put(zonaForeign, zons);
         return dbW.insert(MaquinaBuidem, null, values);
     }
+    //////////////////////////////////////////////////////Tipus
+    public Cursor agafarTipusUn(long id) {
+        return dbR.query(tipusBuidem, new String[]{iD,nomT},
+                iD+ "=?", new String[]{String.valueOf(id)},
+                null, null, null);
+
+    }
     public long addTipus(String nom) {
         ContentValues values = new ContentValues();
         values.put(nomT, nom);
@@ -116,6 +123,14 @@ public class BuidemDataSource {
                 null,
                 iD);
     }
+    public void eliminarTipus(long id) {
+        dbW.delete(tipusBuidem,iD + " = ?", new String[] { String.valueOf(id) });
+    }
+    public void updateTipus(long id,String nom ) {
+        ContentValues values = new ContentValues();
+        values.put(nomT, nom);
 
+        dbW.update(tipusBuidem, values, iD + " = ?", new String[]{String.valueOf(id)});
+    }
 }
 
