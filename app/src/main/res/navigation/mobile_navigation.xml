@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_zona"
-        android:name="com.example.david_projectefinal.ui.zona.zonaFragment"
+        android:name="com.example.david_projectefinal.ui.zona.ZonaFragment"
         android:label="Zones"
         tools:layout="@layout/fragment_zona" />
     <fragment

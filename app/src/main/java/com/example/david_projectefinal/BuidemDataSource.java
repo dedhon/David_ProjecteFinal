@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+
 public class BuidemDataSource {
 
     //Camp id per unic per les 3 taules
@@ -59,6 +61,18 @@ public class BuidemDataSource {
                 null, null, null);
 
     }
+    public Cursor nose(long id)
+    {
+        String query = "SELECT * FROM maquines INNER JOIN tipus ON maquines.Tipus=tipus._id WHERE Tipus = ?";
+       /* String sql = "select tip.NomTipus\n" +
+                "from tipus tip\n" +
+                "inner join maquines maq\n" +
+                "on tip._id = maq.Tipus\n" +
+                "where maq.Tipus=?";*/
+
+        Cursor cursor = dbR.rawQuery(query,  new String[]{String.valueOf(id)});
+        return  cursor;
+    }
     //Agafem totes les maquines
     public Cursor mostrarAllMaquines() {
         return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
@@ -74,7 +88,7 @@ public class BuidemDataSource {
         dbW.delete(MaquinaBuidem,iD + " = ?", new String[] { String.valueOf(id) });
     }
     //Actualitzem les dades d'una maquina amb el id
-    public void updateMaquina(long id,String nom, String adre, int cod, String pob,String tlf, String emil, String num, String data, String tips, String zons ){
+    public void updateMaquina(long id,String nom, String adre, int cod, String pob,String tlf, String emil, String num, String data, int tips, int zons ){
         ContentValues values = new ContentValues();
         values.put(nomM, nom);
         values.put(adreçaM, adre);
@@ -88,7 +102,7 @@ public class BuidemDataSource {
         values.put(zonaForeign, zons);
         dbW.update(MaquinaBuidem, values, iD + " = ?", new String[] {String.valueOf(id)});
     }
-    public long addMaquina(String nom, String adre, int cod, String pob,String tlf, String emil, String num, String data, String tips, String zons ) {
+    public long addMaquina(String nom, String adre, int cod, String pob,String tlf, String emil, String num, String data, int tips, int zons ) {
         ContentValues values = new ContentValues();
         values.put(nomM, nom);
         values.put(adreçaM, adre);
@@ -123,6 +137,7 @@ public class BuidemDataSource {
                 null,
                 iD);
     }
+
     public void eliminarTipus(long id) {
         dbW.delete(tipusBuidem,iD + " = ?", new String[] { String.valueOf(id) });
     }
@@ -131,6 +146,37 @@ public class BuidemDataSource {
         values.put(nomT, nom);
 
         dbW.update(tipusBuidem, values, iD + " = ?", new String[]{String.valueOf(id)});
+    }
+    //////////////////////////////////////////////////////Zones
+    public Cursor agafarZonesUn(long id) {
+        return dbR.query(zonesBuidem, new String[]{iD,nomZ},
+                iD+ "=?", new String[]{String.valueOf(id)},
+                null, null, null);
+
+    }
+    public long addZonas(String nom) {
+        ContentValues values = new ContentValues();
+        values.put(nomZ, nom);
+
+        return dbW.insert(zonesBuidem, null, values);
+    }
+    public Cursor mostrarAllZones() {
+        return dbR.query(zonesBuidem, new String[]{iD,nomZ},
+                null,
+                null,
+                null,
+                null,
+                iD);
+    }
+
+    public void eliminarZones(long id) {
+        dbW.delete(zonesBuidem,iD + " = ?", new String[] { String.valueOf(id) });
+    }
+    public void updateZones(long id,String nom ) {
+        ContentValues values = new ContentValues();
+        values.put(nomZ, nom);
+
+        dbW.update(zonesBuidem, values, iD + " = ?", new String[]{String.valueOf(id)});
     }
 }
 

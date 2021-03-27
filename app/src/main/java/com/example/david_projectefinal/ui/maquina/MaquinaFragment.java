@@ -78,7 +78,6 @@ public class MaquinaFragment extends Fragment {
         if (requestCode == ADD_MAQUINA) {
             if(resultCode==RESULT_OK)
             {
-                // Carreguem tots els productes
                 actualitzarMaquines();
             }
         }
@@ -132,6 +131,7 @@ public class MaquinaFragment extends Fragment {
         }
     }
     public void deleteMaquina(long idF, ViewGroup parent) {
+
         context = parent.getContext();
         bdCursorDelete(idF);
         String nomF, numF;
@@ -230,6 +230,7 @@ public class MaquinaFragment extends Fragment {
     }
     public void dialogAddMaquina()
     {
+
         Bundle bundle = new Bundle();
         long[] idActual = new long[2];
         idActual[0]=1;

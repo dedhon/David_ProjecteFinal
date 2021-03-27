@@ -1,4 +1,4 @@
-package com.example.david_projectefinal.ui.tipus;
+package com.example.david_projectefinal.ui.zona;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,158 +23,156 @@ import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
 
-public class TipusFragment extends Fragment {
-    String[] columnesTipus = new String[]{
-            BuidemDataSource.iD,
-            BuidemDataSource.nomT
 
-    };
-    int[] toTipus = new int[]{
-            R.id.lblId,
-            R.id.lblNomTipu
-    };
-    static String nom;
-    ListView listView;
-    public static adaptadorTipus dataAdapter;
+
+public class ZonaFragment extends Fragment {
     public static BuidemDataSource bd;
-    ImageView addTipus;
+    static String nom;
+    String[] columnesZones = new String[]{
+            BuidemDataSource.iD,
+            BuidemDataSource.nomZ
+    };
+    int[] toZones = new int[]{
+            R.id.lblIdzona,
+            R.id.lblNomZona
+    };
+    ListView listView;
+    ImageView addZona;
+
+    public static adaptadorZona dataAdapter;
     private filtratge filtreAplicat;
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
-        View root = inflater.inflate(R.layout.fragment_tipus, container, false);
-        addTipus = (ImageView) root.findViewById(R.id.imageAddTipus);
-        bd = new BuidemDataSource(getContext());
-        filtreAplicat = filtratge.FILTRE_TOT;
-
-        implementacioListView(root);
-        addTipus(root);
-        return root;
-    }
-
-    public void addTipus(View v) {
-        addTipus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                crearTipus();
-            }
-        });
-    }
-    public void crearTipus()
-    {
-        AlertDialog.Builder Tipus = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        View v2 = inflater.inflate(R.layout.add_tipus, null);
-
-
-        final EditText etNomTip = v2.findViewById(R.id.etZonaNom);
-        Tipus.setView(v2).setPositiveButton("Afegir Tipus", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String nomTipus = etNomTip.getText().toString();
-                if (nomTipus.trim().equals("")) {
-                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                bd.addTipus(nomTipus);
-                actualitzarTipus();
-
-            }
-        });
-        Tipus.setNegativeButton("Cancelar", null);
-        AlertDialog dialog = Tipus.create();
-        dialog.show();
-
-    }
-    private void actualitzarTipus() {
+    private void actualitzarZona() {
 
         // Demanem totes les tasques
-        Cursor cursorMaquines = bd.mostrarAllTipus();
+        Cursor cursorMaquines = bd.mostrarAllZones();
 
         // Demanem les tasques depenen del filtre que s'estigui aplicant
         switch (filtreAplicat) {
             case FILTRE_TOT:
-                cursorMaquines = bd.mostrarAllTipus();
+                cursorMaquines = bd.mostrarAllZones();
                 break;
-
         }
         // Now create a simple cursor adapter and set it to display
         dataAdapter.changeCursor(cursorMaquines);
         dataAdapter.notifyDataSetChanged();
     }
+
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+        View root = inflater.inflate(R.layout.fragment_zona, container, false);
+        addZona = (ImageView) root.findViewById(R.id.imageAddZona);
+        bd = new BuidemDataSource(getContext());
+        filtreAplicat = filtratge.FILTRE_TOT;
+        implementacioListView(root);
+        addZona(root);
+        return root;
+    }
+    public void addZona(View v) {
+        addZona.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crearZona();
+            }
+        });
+    }
+    public void crearZona()
+    {
+        AlertDialog.Builder Zona = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View v2 = inflater.inflate(R.layout.add_zona, null);
+
+
+        final EditText etNomZona = v2.findViewById(R.id.etZonaNom);
+        Zona.setView(v2).setPositiveButton("Afegir Zona", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String nomZona = etNomZona.getText().toString();
+                if (nomZona.trim().equals("")) {
+                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                bd.addZonas(nomZona);
+                actualitzarZona();
+
+            }
+        });
+        Zona.setNegativeButton("Cancelar", null);
+        AlertDialog dialog = Zona.create();
+        dialog.show();
+
+    }
     public void implementacioListView(View root) {
         //Definim una imatge per aplicarli amb el GLIDE un GIF a la imatge
-        ImageView adtipus = (ImageView) root.findViewById(R.id.imageAddTipus);
-        Glide.with(getContext()).load(R.drawable.addmac).into(adtipus);
+        ImageView adzona = (ImageView) root.findViewById(R.id.imageAddZona);
+        Glide.with(getContext()).load(R.drawable.addmac).into(adzona);
         //Instanciem el listView
         listView = (ListView) root.findViewById(R.id.list1);
 
-        Cursor cursor = bd.mostrarAllTipus();
+        Cursor cursor = bd.mostrarAllZones();
 
-        dataAdapter = new adaptadorTipus(getContext(),
-                R.layout.row_estructuratipus,
+        dataAdapter = new adaptadorZona(getContext(),
+                R.layout.row_estructurazones,
                 cursor,
-                columnesTipus,
-                toTipus,
-                1,TipusFragment.this);
+                columnesZones,
+                toZones,
+                1, ZonaFragment.this);
 
         listView.setAdapter(dataAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> listView, View view,
                                     int position, long id) {
-                editarTipus(id);
+                editarZona(id);
             }
         });
     }
-    public void editarTipus(long id)
+    public void editarZona(long id)
     {
-
-        AlertDialog.Builder Tipus = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder Zona = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        View v2 = inflater.inflate(R.layout.add_tipus, null);
+        View v2 = inflater.inflate(R.layout.add_zona, null);
 
-        Cursor updateTipus = bd.agafarTipusUn(id);
-        updateTipus.moveToFirst();
-        TextView titol = (TextView)v2.findViewById(R.id.idAfegirTipus);
-        titol.setText("Actualitzar tipus");
+        Cursor updateZona = bd.agafarZonesUn(id);
+        updateZona.moveToFirst();
+        TextView titol = (TextView)v2.findViewById(R.id.idAfegirZona);
+        titol.setText("Actualitzar Zona");
         final EditText etNom = v2.findViewById(R.id.etZonaNom);
-        etNom.setText(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.nomT)));
+        etNom.setText(updateZona.getString(updateZona.getColumnIndex(BuidemDataSource.nomZ)));
 
-        Tipus.setView(v2).setPositiveButton("Modificar Tipus", new DialogInterface.OnClickListener() {
+        Zona.setView(v2).setPositiveButton("Modificar Zona", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                int codiConvert=0;
+
                 String nom = etNom.getText().toString();
                 if (nom.trim().equals("")) {
                     Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                bd.updateTipus(id, nom);
-                actualitzarTipus();
+                bd.updateZones(id, nom);
+                actualitzarZona();
             }
         });
-        Tipus.setNegativeButton("Cancelar", null);
-        AlertDialog dialog = Tipus.create();
+        Zona.setNegativeButton("Cancelar", null);
+        AlertDialog dialog = Zona.create();
         dialog.show();
 
     }
-
     private static void bdCursorDelete(long idF) {
-        Cursor cursor = bd.agafarTipusUn(idF);
+        Cursor cursor = bd.agafarZonesUn(idF);
         cursor.moveToFirst();
-        nom = cursor.getString(cursor.getColumnIndex(BuidemDataSource.nomT));
+        nom = cursor.getString(cursor.getColumnIndex(BuidemDataSource.nomZ));
 
     }
-    private static void bdEliminarTipus(long idF) {
-        bd.eliminarTipus(idF);
+    private static void bdEliminarZona(long idF) {
+        bd.eliminarZones(idF);
     }
-    public void deleteMaquina(long idF, ViewGroup parent) {
+    public void deleteZona(long idF, ViewGroup parent) {
 
         bdCursorDelete(idF);
         String nomF;
@@ -186,15 +184,15 @@ public class TipusFragment extends Fragment {
         ImageView segur = (ImageView) view.findViewById(R.id.dialog_imageview);
         Glide.with(getContext()).load(R.drawable.segurgif).into(segur);
         alertadd.setView(view);
-        String missatgeAenviar="¿Estas segur que vols eliminar el tipus amb les següents dades:?" + "\n" +
-                "-ID Tipus: " + idF + "\n" +
-                "-Nom Tipus: " + nomF + "\n";
+        String missatgeAenviar="¿Estas segur que vols eliminar la zona amb les següents dades:?" + "\n" +
+                "-ID Zona: " + idF + "\n" +
+                "-Nom Zona: " + nomF + "\n";
         alertadd.setMessage(missatgeAenviar);
         alertadd.setNeutralButton("Si!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dlg, int sumthin) {
-                TipusFragment.bdEliminarTipus(idF);
+                ZonaFragment.bdEliminarZona(idF);
                 filtreAplicat = filtratge.FILTRE_TOT;
-                actualitzarTipus();
+                actualitzarZona();
             }
         });
         alertadd.setNegativeButton("No", null);
@@ -202,29 +200,29 @@ public class TipusFragment extends Fragment {
 
     }
 }
-class adaptadorTipus extends android.widget.SimpleCursorAdapter {
+class adaptadorZona extends android.widget.SimpleCursorAdapter {
 
     private static final String colorTaskPending = "#F04C4C";
     private static final String colorTaskCompleted = "#FFFFFF";
 
-    private TipusFragment aTiconTipus;
+    private ZonaFragment aTiconZona;
 
-    public adaptadorTipus(Context context, int layout, Cursor c, String[] from, int[] to, int flags, TipusFragment frag) {
+    public adaptadorZona(Context context, int layout, Cursor c, String[] from, int[] to, int flags, ZonaFragment fragZ) {
         super(context, layout, c, from, to, flags);
-        aTiconTipus = frag;
+        aTiconZona = fragZ;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
 
-        ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete1234);
+        ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete12345);
         botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
-                aTiconTipus.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
+                aTiconZona.deleteZona(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
             }
         });
         return view;
