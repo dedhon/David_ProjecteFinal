@@ -54,24 +54,53 @@ public class BuidemDataSource {
         dbR.close();
     }
 /////////////Consultes MAQUINES//////////////////////////////////////////
+    //Secció consultes d'ordenació
+    public Cursor ordenarNom() {
+    return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
+            null,
+            null,
+            null,
+            null,
+            nomM);
+    }
+    public Cursor ordenarZona() {
+        return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
+                null,
+                null,
+                null,
+                null,
+                zonaForeign);
+    }
+    public Cursor ordenarPoblacio() {
+        return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
+                null,
+                null,
+                null,
+                null,
+                poblacioM);
+    }
+    public Cursor ordenarAdreça() {
+        return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
+                null,
+                null,
+                null,
+                null,
+                adreçaM);
+    }
+    public Cursor ordenarData() {
+        return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
+                null,
+                null,
+                null,
+                null,
+                dataM);
+    }
     //Agafem tota la info d'una maquina amb un id
     public Cursor agafarMaquinaUna(long id) {
         return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
                 iD+ "=?", new String[]{String.valueOf(id)},
                 null, null, null);
 
-    }
-    public Cursor nose(long id)
-    {
-        String query = "SELECT * FROM maquines INNER JOIN tipus ON maquines.Tipus=tipus._id WHERE Tipus = ?";
-       /* String sql = "select tip.NomTipus\n" +
-                "from tipus tip\n" +
-                "inner join maquines maq\n" +
-                "on tip._id = maq.Tipus\n" +
-                "where maq.Tipus=?";*/
-
-        Cursor cursor = dbR.rawQuery(query,  new String[]{String.valueOf(id)});
-        return  cursor;
     }
     //Agafem totes les maquines
     public Cursor mostrarAllMaquines() {
@@ -117,6 +146,22 @@ public class BuidemDataSource {
         return dbW.insert(MaquinaBuidem, null, values);
     }
     //////////////////////////////////////////////////////Tipus
+    public boolean mirarSiTipusAssignat(long idAbuscar)
+    {
+        boolean contingut=false;
+        Cursor curmirar = dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
+                tipusForeign+ "=?", new String[]{String.valueOf(idAbuscar)},
+                null, null, null);
+
+        if(!curmirar.moveToFirst())
+        {
+            contingut = false;
+        }
+        else{
+            contingut=true;
+        }
+        return contingut;
+    }
     public Cursor agafarTipusUn(long id) {
         return dbR.query(tipusBuidem, new String[]{iD,nomT},
                 iD+ "=?", new String[]{String.valueOf(id)},
@@ -148,6 +193,22 @@ public class BuidemDataSource {
         dbW.update(tipusBuidem, values, iD + " = ?", new String[]{String.valueOf(id)});
     }
     //////////////////////////////////////////////////////Zones
+    public boolean mirarSiZonaAssignat(long idAbuscar)
+    {
+        boolean contingut=false;
+        Cursor curmirar = dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
+                zonaForeign+ "=?", new String[]{String.valueOf(idAbuscar)},
+                null, null, null);
+
+        if(!curmirar.moveToFirst())
+        {
+            contingut = false;
+        }
+        else{
+            contingut=true;
+        }
+        return contingut;
+    }
     public Cursor agafarZonesUn(long id) {
         return dbR.query(zonesBuidem, new String[]{iD,nomZ},
                 iD+ "=?", new String[]{String.valueOf(id)},

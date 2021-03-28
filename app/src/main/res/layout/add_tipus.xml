@@ -12,7 +12,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/idAfegirTipus"
+        android:id="@+id/idSeleccioOrdena"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="#4CAF50"

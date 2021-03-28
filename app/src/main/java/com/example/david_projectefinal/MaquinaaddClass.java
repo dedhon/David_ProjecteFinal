@@ -1,16 +1,12 @@
 package com.example.david_projectefinal;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,18 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
-import com.example.david_projectefinal.ui.maquina.MaquinaFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class MaquinaaddClass extends AppCompatActivity {
     String dataFINAL="";
@@ -43,15 +32,14 @@ public class MaquinaaddClass extends AppCompatActivity {
     EditText etTlf;
     EditText etEmail;
     EditText etNumSer;
-    EditText etZona;
-    Spinner tipus;
+    Spinner tipus,zones;
     ImageView aceptar,cancel,calendar;
     ///////////////////////////////Secció spinner per Tipus
     ArrayList<TipusMaquina> llistaTipus;
     ArrayList<String> auxListTipus;
     ArrayAdapter<String> arrayAdapterTipus;
     ///////////////////////////////Secció spinner per Zona
-    ArrayList<TipusMaquina> llistaZona;
+    ArrayList<ZonaMaquina> llistaZona;
     ArrayList<String> auxListZonas;
     ArrayAdapter<String> arrayAdapterZonas;
     int idTipusFinal,idZonaFinal;
@@ -60,6 +48,7 @@ public class MaquinaaddClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addmaquina);
         tipus=findViewById(R.id.TipusSpinner);
+        zones=findViewById(R.id.ZonaSpinner);
         bd = new BuidemDataSource(this);
         aceptar = findViewById(R.id.btnAceptar);
         cancel = findViewById(R.id.btnCancelar);
@@ -75,10 +64,10 @@ public class MaquinaaddClass extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etNumSer = findViewById(R.id.etNumSer);
         etData = findViewById(R.id.etData);
-        etZona = findViewById(R.id.etZona);
+
         long[] filtre= new long[2];
         filtre=this.getIntent().getExtras().getLongArray("FILTRE");;
-        gestionarSpinnerTipus();
+        gestionarSpinners();
         if(filtre[0] == 1)
         {
             crearAddMaquina();
@@ -89,26 +78,55 @@ public class MaquinaaddClass extends AppCompatActivity {
             }
         }
     }
-    public void gestionarSpinnerZones()
+
+    public void gestionarSpinners()
     {
-        Cursor cur = bd.mostrarAllTipus();
+        //Gestionem els dos cursors per omplir els spinners
+        Cursor curTipus = bd.mostrarAllTipus();
+        Cursor curZona = bd.mostrarAllZones();
+        //Instanciem les llistes
         llistaTipus = new ArrayList<>();
+        llistaZona = new ArrayList<>();
+        //Creem els objectes de les clases
         TipusMaquina lstTipus = null;
-        while(cur.moveToNext())
+        ZonaMaquina lstZona = null;
+        //Fem els 2 whiles, 1 per cada cursor per saber agafar les dades per els spinners
+        while(curTipus.moveToNext())
         {
-            int id = cur.getInt(cur.getColumnIndex(BuidemDataSource.iD));
-            String nom=cur.getString(cur.getColumnIndex(BuidemDataSource.nomT));
+            int id = curTipus.getInt(curTipus.getColumnIndex(BuidemDataSource.iD));
+            String nom=curTipus.getString(curTipus.getColumnIndex(BuidemDataSource.nomT));
             lstTipus = new TipusMaquina(id,nom);
             llistaTipus.add(lstTipus);
         }
-        cur.close();
+        while(curZona.moveToNext())
+        {
+            int id = curZona.getInt(curZona.getColumnIndex(BuidemDataSource.iD));
+            String nom=curZona.getString(curZona.getColumnIndex(BuidemDataSource.nomZ));
+            lstZona = new ZonaMaquina(id,nom);
+            llistaZona.add(lstZona);
+        }
+        //Tanquem els cursors
+        curTipus.close();
+        curZona.close();
+        //Instanciem els arraysList de strings
         auxListTipus = new ArrayList<String>();
+        auxListZonas = new ArrayList<String>();
+        //Fiquem el contingut del array list d'0bjectes en format String a dintre del arrayList de strings
         for(int i = 0; i < llistaTipus.size();i++)
         {
             auxListTipus.add(String.valueOf(llistaTipus.get(i).getElId()) + "- " + llistaTipus.get(i).getNomTips());
         }
+        for(int j = 0; j < llistaZona.size();j++)
+        {
+            auxListZonas.add(String.valueOf(llistaZona.get(j).getElIdZona()) + "- " + llistaZona.get(j).getNomZona());
+        }
+        //Instanciem el adaptador que contindra les dades de la BD
         arrayAdapterTipus = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListTipus);
+        arrayAdapterZonas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListZonas);
+        //Inflem els spinners amb els adaptadors
         tipus.setAdapter(arrayAdapterTipus);
+        zones.setAdapter(arrayAdapterZonas);
+        //Definim els set on click dels spinners
         tipus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -127,31 +145,10 @@ public class MaquinaaddClass extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-    }
-    public void gestionarSpinnerTipus()
-    {
-        Cursor cur = bd.mostrarAllTipus();
-        llistaTipus = new ArrayList<>();
-        TipusMaquina lstTipus = null;
-        while(cur.moveToNext())
-        {
-            int id = cur.getInt(cur.getColumnIndex(BuidemDataSource.iD));
-            String nom=cur.getString(cur.getColumnIndex(BuidemDataSource.nomT));
-            lstTipus = new TipusMaquina(id,nom);
-            llistaTipus.add(lstTipus);
-        }
-        cur.close();
-        auxListTipus = new ArrayList<String>();
-        for(int i = 0; i < llistaTipus.size();i++)
-        {
-            auxListTipus.add(String.valueOf(llistaTipus.get(i).getElId()) + "- " + llistaTipus.get(i).getNomTips());
-        }
-        arrayAdapterTipus = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListTipus);
-        tipus.setAdapter(arrayAdapterTipus);
-        tipus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        zones.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String opcioTriada=tipus.getSelectedItem().toString();
+                String opcioTriada=zones.getSelectedItem().toString();
                 String auxOption="";
                 int cont=0;
                 while(opcioTriada.charAt(cont)!='-')
@@ -160,7 +157,7 @@ public class MaquinaaddClass extends AppCompatActivity {
                     cont++;
                 }
 
-                idTipusFinal = Integer.parseInt(auxOption);
+                idZonaFinal = Integer.parseInt(auxOption);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -181,7 +178,7 @@ public class MaquinaaddClass extends AppCompatActivity {
         Cursor updateMaquina = bd.agafarMaquinaUna(id);
         updateMaquina.moveToFirst();
 
-        TextView titol = (TextView)findViewById(R.id.idAfegirTipus);
+        TextView titol = (TextView)findViewById(R.id.idSeleccioOrdena);
         titol.setText("Actualitzar màquina");
 
         etNom.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.nomM)));
@@ -202,7 +199,7 @@ public class MaquinaaddClass extends AppCompatActivity {
         etData.setEnabled(false);
 
 
-        etZona.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.zonaForeign)));
+
         etData.setEnabled(false);
         etData.setText(dataFINAL);
         aceptar.setOnClickListener(new View.OnClickListener() {
@@ -246,13 +243,13 @@ public class MaquinaaddClass extends AppCompatActivity {
                     Toast.makeText(MaquinaaddClass.this,"El tipus és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String zons = etZona.getText().toString();
-                if (zons.trim().equals("")) {
+                String probaIdZona = String.valueOf(idZonaFinal);
+                if (probaIdZona.equals("0")) {
                     Toast.makeText(MaquinaaddClass.this,"La zona és obligatoria!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                bd.updateMaquina(id, nom, adreça, codiConvert, pob, tlf, email, numser, data, idTipusFinal, 0);
+                bd.updateMaquina(id, nom, adreça, codiConvert, pob, tlf, email, numser, data, idTipusFinal, idZonaFinal);
                 Intent mIntent = new Intent();
                 setResult(RESULT_OK, mIntent);
                 finish();
@@ -323,13 +320,13 @@ public class MaquinaaddClass extends AppCompatActivity {
                     Toast.makeText(MaquinaaddClass.this,"El tipus és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String zons = etZona.getText().toString();
-                if (zons.trim().equals("")) {
+                String probaIdZona = String.valueOf(idZonaFinal);
+                if (probaIdZona.equals("0")) {
                     Toast.makeText(MaquinaaddClass.this,"La zona és obligatoria!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                bd.addMaquina(nom, adreça, codiConvert, pob, tlf, email, numser, data, idTipusFinal, 1);
+                bd.addMaquina(nom, adreça, codiConvert, pob, tlf, email, numser, data, idTipusFinal, idZonaFinal);
 
                 Intent mIntent = new Intent();
                 setResult(RESULT_OK, mIntent);

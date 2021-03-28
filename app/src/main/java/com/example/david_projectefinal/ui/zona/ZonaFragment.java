@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
-
+import com.example.david_projectefinal.ui.tipus.TipusFragment;
 
 
 public class ZonaFragment extends Fragment {
@@ -190,9 +190,22 @@ public class ZonaFragment extends Fragment {
         alertadd.setMessage(missatgeAenviar);
         alertadd.setNeutralButton("Si!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dlg, int sumthin) {
-                ZonaFragment.bdEliminarZona(idF);
-                filtreAplicat = filtratge.FILTRE_TOT;
-                actualitzarZona();
+                boolean buscaEiliminar = bd.mirarSiZonaAssignat(idF);
+
+                if(buscaEiliminar==false)
+                {
+                    ZonaFragment.bdEliminarZona(idF);
+                    filtreAplicat = filtratge.FILTRE_TOT;
+                    actualitzarZona();
+                }
+                else{
+                    if(buscaEiliminar==true)
+                    {
+                        Toast.makeText(getContext(),"La zona esta assignada, no pots eliminarla!!", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
             }
         });
         alertadd.setNegativeButton("No", null);

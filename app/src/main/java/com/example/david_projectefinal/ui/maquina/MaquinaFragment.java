@@ -34,13 +34,16 @@ import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
 
 public class MaquinaFragment extends Fragment {
     Context context;
+    int pos=0;
     static String nom, numSerie;
     String dataFINAL;
     private filtratge filtreAplicat;
@@ -78,12 +81,14 @@ public class MaquinaFragment extends Fragment {
         if (requestCode == ADD_MAQUINA) {
             if(resultCode==RESULT_OK)
             {
+                filtreAplicat = filtratge.FILTRE_TOT;
                 actualitzarMaquines();
             }
         }
         if (requestCode == UPDATA_MAQUINA) {
             if(resultCode==RESULT_OK)
             {
+                filtreAplicat = filtratge.FILTRE_TOT;
                 actualitzarMaquines();
             }
         }
@@ -93,7 +98,6 @@ public class MaquinaFragment extends Fragment {
     //Image views
     ImageView addMaquina, deleteMaquina, imageTrucada;
     public static BuidemDataSource bd;
-    Context mycontext;
     public static adapterTodoIcon dataAdapter;
 
     ListView listView;
@@ -105,7 +109,7 @@ public class MaquinaFragment extends Fragment {
         //Definim la vista i la inflem amb el fragment de maquina
         View myview = inflater.inflate(R.layout.fragment_maquina, container, false);
         demanarPermisos();
-        filtreAplicat = filtratge.FILTRE_TOT;
+
         deleteMaquina = (ImageView) myview.findViewById(R.id.imgdelete123);
         implementacioListView(myview);
         addMaquinaButon(myview);
@@ -130,8 +134,72 @@ public class MaquinaFragment extends Fragment {
             }
         }
     }
-    public void deleteMaquina(long idF, ViewGroup parent) {
+    public void ordenarMaquines()
+    {
+        List<CharSequence> list = new ArrayList<CharSequence>();
+        list.add("Nom Client");
+        list.add("Zona");
+        list.add("Població");
+        list.add("Adreça");
+        list.add("Data última revisió");
+        final CharSequence[] dialogList =  list.toArray(new CharSequence[list.size()]);
+        final AlertDialog.Builder builderDialog = new AlertDialog.Builder(getContext());
 
+        LayoutInflater inflater = getLayoutInflater();
+        View viewTitle = inflater.inflate(R.layout.seleccio_ordenacio, null);
+        builderDialog.setCustomTitle(viewTitle);
+
+        builderDialog.setIcon(R.mipmap.ic_launcher);
+
+        int count = dialogList.length;
+        //  boolean[] is_checked = new boolean[count];
+
+        builderDialog.setSingleChoiceItems(dialogList,-1, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                pos=which;
+            }
+        });
+        builderDialog.setPositiveButton("Aceptar",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(dialogList[pos].equals("Nom Client")){
+                            filtreAplicat = filtratge.FILTRE_NOM;
+                            actualitzarMaquines();
+                        }
+                        if(dialogList[pos].equals("Zona")){
+                            filtreAplicat = filtratge.FILTRE_ZONA;
+                            actualitzarMaquines();
+                        }
+                        if(dialogList[pos].equals("Població")){
+                            filtreAplicat = filtratge.FILTRE_POBLACIO;
+                            actualitzarMaquines();
+                        }
+                        if(dialogList[pos].equals("Adreça")){
+                            filtreAplicat = filtratge.FILTRE_ADREÇA;
+                            actualitzarMaquines();
+                        }
+                        if(dialogList[pos].equals("Data última revisió")){
+                            filtreAplicat = filtratge.FILTRE_DATA;
+                            actualitzarMaquines();
+                        }
+
+                    }
+                });
+
+        builderDialog.setNegativeButton("Cancelar",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        AlertDialog alert = builderDialog.create();
+        alert.show();
+    }
+    public void deleteMaquina(long idF, ViewGroup parent) {
         context = parent.getContext();
         bdCursorDelete(idF);
         String nomF, numF;
@@ -182,7 +250,48 @@ public class MaquinaFragment extends Fragment {
             }
         });
     }
+    public Cursor primeraCarregaCursor()
+    {
+        Cursor aux = null;
+        if(filtreAplicat==null)
+        {
+            aux = bd.mostrarAllMaquines();
+        }
+        else{
+            if(filtreAplicat.equals(filtratge.FILTRE_NOM))
+            {
+                aux = bd.ordenarNom();
+            }
+            else{
+                if(filtreAplicat.equals(filtratge.FILTRE_ZONA))
+                {
+                    aux = bd.ordenarZona();
+                }
+                else{
+                    if(filtreAplicat.equals(filtratge.FILTRE_POBLACIO))
+                    {
+                        aux = bd.ordenarPoblacio();
+                    }
+                    else{
+                        if(filtreAplicat.equals(filtratge.FILTRE_ADREÇA))
+                        {
+                            aux = bd.ordenarAdreça();
+                        }
+                        else{
+                            if(filtreAplicat.equals(filtratge.FILTRE_DATA))
+                            {
+                                aux = bd.ordenarData();
+                            }
+                            else{
 
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return aux;
+    }
     public void implementacioListView(View myview) {
         //Definim una imatge per aplicarli amb el GLIDE un GIF a la imatge
         addMaquina = (ImageView) myview.findViewById(R.id.imageAddMaquina);
@@ -190,7 +299,7 @@ public class MaquinaFragment extends Fragment {
         //Instanciem el listView
         listView = (ListView) myview.findViewById(R.id.list1);
 
-        Cursor cursor = bd.mostrarAllMaquines();
+        Cursor cursor = primeraCarregaCursor();
 
         dataAdapter = new adapterTodoIcon(getContext(),
                 R.layout.row_estructuramaquines,
@@ -210,24 +319,6 @@ public class MaquinaFragment extends Fragment {
         });
     }
 
-    public void data(View v)
-    {
-        Calendar cal = Calendar.getInstance();
-        int any = cal.get(Calendar.YEAR);
-        int mes = cal.get(Calendar.MONTH);
-        int dia = cal.get(Calendar.DAY_OF_MONTH);
-        final EditText etData = v.findViewById(R.id.etData);
-        DatePickerDialog dpd = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                int monthaux = month + 1;
-                dataFINAL = dayOfMonth + "-" + monthaux + "-" + year;
-                etData.setEnabled(false);
-                etData.setText(dataFINAL);
-            }
-        }, any, mes, dia);
-        dpd.show();
-    }
     public void dialogAddMaquina()
     {
 
@@ -252,103 +343,6 @@ public class MaquinaFragment extends Fragment {
         intent.putExtras(bundle);
         startActivityForResult(intent,UPDATA_MAQUINA);
 
-        /*AlertDialog.Builder Maquina = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        View v2 = inflater.inflate(R.layout.addmaquina, null);
-
-        ImageView calendar = (ImageView) v2.findViewById(R.id.imageViewData);
-        Glide.with(getContext()).load(R.drawable.cal).into(calendar);
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                data(v2);
-            }
-        });
-        Cursor updateMaquina = bd.agafarMaquinaUna(id);
-        updateMaquina.moveToFirst();
-        TextView titol = (TextView)v2.findViewById(R.id.idAfegirTipus);
-        titol.setText("Actualitzar màquina");
-        final EditText etNom = v2.findViewById(R.id.etNom);
-        etNom.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.nomM)));
-        final EditText etDir = v2.findViewById(R.id.etDir);
-        etDir.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.adreçaM)));
-        final EditText etCodiPos = v2.findViewById(R.id.etCodiPostal);
-        etCodiPos.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.codiPostalM)));
-        final EditText etPobl = v2.findViewById(R.id.etPoblacio);
-        etPobl.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.poblacioM)));
-        final EditText etTlf = v2.findViewById(R.id.etTelefon);
-        etTlf.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tlfM)));
-        final EditText etEmail = v2.findViewById(R.id.etEmail);
-        etEmail.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.emailM)));
-        final EditText etNumSer = v2.findViewById(R.id.etNumSer);
-        etNumSer.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.numM)));
-        final EditText etData = v2.findViewById(R.id.etData);
-        etData.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.dataM)));
-        etData.setEnabled(false);
-        final EditText etTipus = v2.findViewById(R.id.etTipus);
-        etTipus.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.tipusForeign)));
-        final EditText etZona = v2.findViewById(R.id.etZona);
-        etZona.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.zonaForeign)));
-        etData.setEnabled(false);
-        etData.setText(dataFINAL);
-        Maquina.setView(v2).setPositiveButton("Modificar Màquina", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                int codiConvert=0;
-                String nom = etNom.getText().toString();
-                if (nom.trim().equals("")) {
-                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String adreça = etDir.getText().toString();
-                if (adreça.trim().equals("")) {
-                    Toast.makeText(getContext(),"L'adreça és obligatoria!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String codiPos = etCodiPos.getText().toString();
-
-                if (codiPos.trim().equals("")) {
-                    Toast.makeText(getContext(),"El codi postal és obligatori!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else{
-                    codiConvert = Integer.parseInt(codiPos);
-                }
-                String pob = etPobl.getText().toString();
-                if (pob.trim().equals("")) {
-                    Toast.makeText(getContext(),"La població és obligatoria!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                String tlf = etTlf.getText().toString();
-                String email = etEmail.getText().toString();
-                String numser = etNumSer.getText().toString();
-                if (numser.trim().equals("")) {
-                    Toast.makeText(getContext(),"El número de serie és obligatori!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String data = etData.getText().toString();
-                String tips = etTipus.getText().toString();
-                if (tips.trim().equals("")) {
-                    Toast.makeText(getContext(),"El tipus és obligatori!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String zons = etZona.getText().toString();
-                if (zons.trim().equals("")) {
-                    Toast.makeText(getContext(),"La zona és obligatoria!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                bd.updateMaquina(id, nom, adreça, codiConvert, pob, tlf, email, numser, data, tips, zons);
-                actualitzarMaquines();
-            }
-        });
-        Maquina.setNegativeButton("Cancelar", null);
-        AlertDialog dialog = Maquina.create();
-        dialog.show();*/
-
 
     }
 
@@ -363,22 +357,21 @@ public class MaquinaFragment extends Fragment {
                 cursorMaquines = bd.mostrarAllMaquines();
                 break;
             case FILTRE_NOM:
-                // cursorMaquines = bd.filtreNomesDescripcio();
+                 cursorMaquines = bd.ordenarNom();
                 break;
             case FILTRE_ADREÇA:
-                //cursorMaquines = bd.filtreStockMesPetitZeroOigual();
+                cursorMaquines = bd.ordenarAdreça();
                 break;
-            case FILTRE_CODI:
-                //cursorMaquines = bd.filtreStockMesPetitZeroOigual();
+            case FILTRE_ZONA:
+                cursorMaquines = bd.ordenarZona();
                 break;
             case FILTRE_POBLACIO:
-                //cursorMaquines = bd.filtreStockMesPetitZeroOigual();
+                cursorMaquines = bd.ordenarPoblacio();
                 break;
             case FILTRE_DATA:
-                //cursorMaquines = bd.filtreStockMesPetitZeroOigual();
+                cursorMaquines = bd.ordenarData();
                 break;
         }
-        // Now create a simple cursor adapter and set it to display
         dataAdapter.changeCursor(cursorMaquines);
         dataAdapter.notifyDataSetChanged();
     }

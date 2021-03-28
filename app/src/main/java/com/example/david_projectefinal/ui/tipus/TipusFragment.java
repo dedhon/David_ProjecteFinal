@@ -139,7 +139,7 @@ public class TipusFragment extends Fragment {
 
         Cursor updateTipus = bd.agafarTipusUn(id);
         updateTipus.moveToFirst();
-        TextView titol = (TextView)v2.findViewById(R.id.idAfegirTipus);
+        TextView titol = (TextView)v2.findViewById(R.id.idSeleccioOrdena);
         titol.setText("Actualitzar tipus");
         final EditText etNom = v2.findViewById(R.id.etZonaNom);
         etNom.setText(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.nomT)));
@@ -174,7 +174,7 @@ public class TipusFragment extends Fragment {
     private static void bdEliminarTipus(long idF) {
         bd.eliminarTipus(idF);
     }
-    public void deleteMaquina(long idF, ViewGroup parent) {
+    public void deleteTipus(long idF, ViewGroup parent) {
 
         bdCursorDelete(idF);
         String nomF;
@@ -192,9 +192,22 @@ public class TipusFragment extends Fragment {
         alertadd.setMessage(missatgeAenviar);
         alertadd.setNeutralButton("Si!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dlg, int sumthin) {
-                TipusFragment.bdEliminarTipus(idF);
-                filtreAplicat = filtratge.FILTRE_TOT;
-                actualitzarTipus();
+                boolean buscaEiliminar = bd.mirarSiTipusAssignat(idF);
+
+                if(buscaEiliminar==false)
+                {
+                    TipusFragment.bdEliminarTipus(idF);
+                    filtreAplicat = filtratge.FILTRE_TOT;
+                    actualitzarTipus();
+                }
+                else{
+                    if(buscaEiliminar==true)
+                    {
+                        Toast.makeText(getContext(),"El tipus de màquina esta assignat, no pots eliminarlo!!", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
             }
         });
         alertadd.setNegativeButton("No", null);
@@ -224,7 +237,7 @@ class adaptadorTipus extends android.widget.SimpleCursorAdapter {
 
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
-                aTiconTipus.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
+                aTiconTipus.deleteTipus(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
             }
         });
         return view;
