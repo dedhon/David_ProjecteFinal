@@ -95,6 +95,16 @@ public class BuidemDataSource {
                 null,
                 dataM);
     }
+    /////////Seccio filtratge màquines
+    public Cursor filtrarNumSerie(String nums) {
+        final String MY_QUERY = "SELECT * FROM maquines WHERE NumMaquina LIKE '%" + nums + "%'";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+
+
+
     //Agafem tota la info d'una maquina amb un id
     public Cursor agafarMaquinaUna(long id) {
         return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},

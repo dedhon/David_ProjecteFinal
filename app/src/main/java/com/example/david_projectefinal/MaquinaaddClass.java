@@ -178,7 +178,7 @@ public class MaquinaaddClass extends AppCompatActivity {
         Cursor updateMaquina = bd.agafarMaquinaUna(id);
         updateMaquina.moveToFirst();
 
-        TextView titol = (TextView)findViewById(R.id.idSeleccioOrdena);
+        TextView titol = (TextView)findViewById(R.id.idBuscar);
         titol.setText("Actualitzar màquina");
 
         etNom.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.nomM)));
@@ -197,11 +197,6 @@ public class MaquinaaddClass extends AppCompatActivity {
 
         etData.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.dataM)));
         etData.setEnabled(false);
-
-
-
-        etData.setEnabled(false);
-        etData.setText(dataFINAL);
         aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

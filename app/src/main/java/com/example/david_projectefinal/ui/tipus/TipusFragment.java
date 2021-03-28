@@ -139,7 +139,7 @@ public class TipusFragment extends Fragment {
 
         Cursor updateTipus = bd.agafarTipusUn(id);
         updateTipus.moveToFirst();
-        TextView titol = (TextView)v2.findViewById(R.id.idSeleccioOrdena);
+        TextView titol = (TextView)v2.findViewById(R.id.idBuscar);
         titol.setText("Actualitzar tipus");
         final EditText etNom = v2.findViewById(R.id.etZonaNom);
         etNom.setText(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.nomT)));

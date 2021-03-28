@@ -2,7 +2,6 @@ package com.example.david_projectefinal.ui.maquina;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,14 +11,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,10 +32,8 @@ import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -47,6 +45,8 @@ public class MaquinaFragment extends Fragment {
     static String nom, numSerie;
     String dataFINAL;
     private filtratge filtreAplicat;
+
+
     //Contingut adapter per listview
     String[] columnesMaquina = new String[]{
             BuidemDataSource.iD,
@@ -101,7 +101,25 @@ public class MaquinaFragment extends Fragment {
     public static adapterTodoIcon dataAdapter;
 
     ListView listView;
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.ordenar:  {
+                ordenarMaquines();
+                return true;
+            }
+            case R.id.filtrar: {
+                buscarMaquinaFiltre();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
+    }    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_actionbar_opcions, menu);
+    }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         //Instanciem la base de dades amb aquest contexte
@@ -113,8 +131,37 @@ public class MaquinaFragment extends Fragment {
         deleteMaquina = (ImageView) myview.findViewById(R.id.imgdelete123);
         implementacioListView(myview);
         addMaquinaButon(myview);
-
+        setHasOptionsMenu(true);
         return myview;
+    }
+    public void buscarMaquinaFiltre()
+    {
+        AlertDialog.Builder buscador = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View v2 = inflater.inflate(R.layout.buscar_numserie, null);
+
+
+        final EditText etNumser = v2.findViewById(R.id.etnumserieAbuscar);
+        buscador.setView(v2).setPositiveButton("Buscar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String aux = etNumser.getText().toString();
+                Cursor curAux = bd.filtrarNumSerie(aux);
+                dataAdapter = new adapterTodoIcon(getContext(),
+                        R.layout.row_estructuramaquines,
+                        curAux,
+                        columnesMaquina,
+                        toMaquina,
+                        1, MaquinaFragment.this);
+
+                listView.setAdapter(dataAdapter);
+            }
+        });
+        buscador.setNegativeButton("Cancelar", null);
+        AlertDialog dialog = buscador.create();
+        dialog.show();
+
     }
     public void demanarPermisos()
     {
