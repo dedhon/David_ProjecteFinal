@@ -33,14 +33,19 @@ public class MaquinaaddClass extends AppCompatActivity {
     EditText etEmail;
     EditText etNumSer;
     Spinner tipus,zones;
+    long[] filtre;
     ImageView aceptar,cancel,calendar;
+    boolean auxSemaforTipus = false;
+    boolean auxSemaforZona = false;
     ///////////////////////////////Secció spinner per Tipus
     ArrayList<TipusMaquina> llistaTipus;
     ArrayList<String> auxListTipus;
+    ArrayList<String> auxListTipusFinal;
     ArrayAdapter<String> arrayAdapterTipus;
     ///////////////////////////////Secció spinner per Zona
     ArrayList<ZonaMaquina> llistaZona;
     ArrayList<String> auxListZonas;
+    ArrayList<String> auxListZonasFinal;
     ArrayAdapter<String> arrayAdapterZonas;
     int idTipusFinal,idZonaFinal;
     @Override
@@ -65,7 +70,7 @@ public class MaquinaaddClass extends AppCompatActivity {
         etNumSer = findViewById(R.id.etNumSer);
         etData = findViewById(R.id.etData);
 
-        long[] filtre= new long[2];
+        filtre= new long[2];
         filtre=this.getIntent().getExtras().getLongArray("FILTRE");;
         gestionarSpinners();
         if(filtre[0] == 1)
@@ -82,6 +87,8 @@ public class MaquinaaddClass extends AppCompatActivity {
     public void gestionarSpinners()
     {
         //Gestionem els dos cursors per omplir els spinners
+        Cursor auxCursor = bd.agafarMaquinaUna(filtre[1]);
+        auxCursor.moveToFirst();
         Cursor curTipus = bd.mostrarAllTipus();
         Cursor curZona = bd.mostrarAllZones();
         //Instanciem les llistes
@@ -111,21 +118,69 @@ public class MaquinaaddClass extends AppCompatActivity {
         //Instanciem els arraysList de strings
         auxListTipus = new ArrayList<String>();
         auxListZonas = new ArrayList<String>();
-        //Fiquem el contingut del array list d'0bjectes en format String a dintre del arrayList de strings
-        for(int i = 0; i < llistaTipus.size();i++)
+        auxListTipusFinal = new ArrayList<String>();
+        auxListZonasFinal = new ArrayList<String>();
+        if(filtre[0]==1)
         {
-            auxListTipus.add(String.valueOf(llistaTipus.get(i).getElId()) + "- " + llistaTipus.get(i).getNomTips());
+            //Fiquem per defecte les dos opcions per triar al spinner
+            auxListTipus.add(String.valueOf("--" + " Selecciona un tipus"));
+            auxListZonas.add(String.valueOf("--" + " Selecciona una zona"));
+            for(int i = 0; i < llistaTipus.size();i++)
+            {
+                auxListTipus.add(String.valueOf(llistaTipus.get(i).getElId()) + "- " + llistaTipus.get(i).getNomTips());
+            }
+            for(int j = 0; j < llistaZona.size();j++)
+            {
+                auxListZonas.add(String.valueOf(llistaZona.get(j).getElIdZona()) + "- " + llistaZona.get(j).getNomZona());
+            }
+            //Instanciem el adaptador que contindra les dades de la BD segons la crida
+            arrayAdapterTipus = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListTipus);
+            arrayAdapterZonas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListZonas);
         }
-        for(int j = 0; j < llistaZona.size();j++)
-        {
-            auxListZonas.add(String.valueOf(llistaZona.get(j).getElIdZona()) + "- " + llistaZona.get(j).getNomZona());
+        else{
+            if(filtre[0]==2)
+            {
+                //Fiquem el contingut del array list d'0bjectes en format String a dintre del arrayList de strings
+                for(int i = 0; i < llistaTipus.size();i++)
+                {
+                    if(llistaTipus.get(i).getElId() == auxCursor.getInt(auxCursor.getColumnIndex(BuidemDataSource.tipusForeign)))
+                    {
+                        auxListTipusFinal.add(String.valueOf(llistaTipus.get(i).getElId()) + "- " + llistaTipus.get(i).getNomTips());
+                    }
+                    else{
+                        auxListTipus.add(String.valueOf(llistaTipus.get(i).getElId()) + "- " + llistaTipus.get(i).getNomTips());
+                    }
+                }
+                for(int j = 0; j < llistaZona.size();j++)
+                {
+                    if(llistaZona.get(j).getElIdZona() == auxCursor.getInt(auxCursor.getColumnIndex(BuidemDataSource.zonaForeign)))
+                    {
+                        auxListZonasFinal.add(String.valueOf(llistaZona.get(j).getElIdZona()) + "- " + llistaZona.get(j).getNomZona());
+                    }
+                    else{
+                        auxListZonas.add(String.valueOf(llistaZona.get(j).getElIdZona()) + "- " + llistaZona.get(j).getNomZona());
+                    }
+                }
+                for(int p = 0; p < auxListTipus.size();p++)
+                {
+                    auxListTipusFinal.add(auxListTipus.get(p));
+                }
+                for(int l = 0; l < auxListZonas.size();l++)
+                {
+                    auxListZonasFinal.add(auxListZonas.get(l));
+                }
+                //Instanciem el adaptador que contindra les dades de la BD segons la crida
+                arrayAdapterTipus = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListTipusFinal);
+                arrayAdapterZonas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListZonasFinal);
+            }
         }
-        //Instanciem el adaptador que contindra les dades de la BD
-        arrayAdapterTipus = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListTipus);
-        arrayAdapterZonas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListZonas);
+
+
+
         //Inflem els spinners amb els adaptadors
         tipus.setAdapter(arrayAdapterTipus);
         zones.setAdapter(arrayAdapterZonas);
+
         //Definim els set on click dels spinners
         tipus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -138,8 +193,15 @@ public class MaquinaaddClass extends AppCompatActivity {
                     auxOption = auxOption + "" + opcioTriada.charAt(cont);
                     cont++;
                 }
+                if(auxOption!="")
+                {
+                    idTipusFinal = Integer.parseInt(auxOption);
+                    auxSemaforTipus=false;
+                }
+                else{
+                    auxSemaforTipus=true;
+                }
 
-                idTipusFinal = Integer.parseInt(auxOption);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -156,8 +218,15 @@ public class MaquinaaddClass extends AppCompatActivity {
                     auxOption = auxOption + "" + opcioTriada.charAt(cont);
                     cont++;
                 }
+                if(auxOption!="")
+                {
+                    idZonaFinal = Integer.parseInt(auxOption);
+                    auxSemaforZona=false;
+                }
+                else{
+                    auxSemaforZona=true;
+                }
 
-                idZonaFinal = Integer.parseInt(auxOption);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -261,6 +330,7 @@ public class MaquinaaddClass extends AppCompatActivity {
 
     }
     public void crearAddMaquina() {
+
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -311,12 +381,12 @@ public class MaquinaaddClass extends AppCompatActivity {
                 }
                 String data = etData.getText().toString();
                 String probaId = String.valueOf(idTipusFinal);
-                if (probaId.equals("0")) {
+                if (probaId.equals("0") || auxSemaforTipus==true) {
                     Toast.makeText(MaquinaaddClass.this,"El tipus és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String probaIdZona = String.valueOf(idZonaFinal);
-                if (probaIdZona.equals("0")) {
+                if (probaIdZona.equals("0") || auxSemaforZona==true) {
                     Toast.makeText(MaquinaaddClass.this,"La zona és obligatoria!!", Toast.LENGTH_SHORT).show();
                     return;
                 }

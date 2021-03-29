@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,7 +47,7 @@ public class MaquinaFragment extends Fragment {
     String dataFINAL;
     private filtratge filtreAplicat;
 
-
+    MediaPlayer mediaPlayer;
     //Contingut adapter per listview
     String[] columnesMaquina = new String[]{
             BuidemDataSource.iD,
@@ -115,11 +116,12 @@ public class MaquinaFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-    }    @Override
+    }
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_actionbar_opcions, menu);
     }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         //Instanciem la base de dades amb aquest contexte
@@ -141,7 +143,6 @@ public class MaquinaFragment extends Fragment {
 
         View v2 = inflater.inflate(R.layout.buscar_numserie, null);
 
-
         final EditText etNumser = v2.findViewById(R.id.etnumserieAbuscar);
         buscador.setView(v2).setPositiveButton("Buscar", new DialogInterface.OnClickListener() {
             @Override
@@ -154,7 +155,6 @@ public class MaquinaFragment extends Fragment {
                         columnesMaquina,
                         toMaquina,
                         1, MaquinaFragment.this);
-
                 listView.setAdapter(dataAdapter);
             }
         });
@@ -247,6 +247,9 @@ public class MaquinaFragment extends Fragment {
         alert.show();
     }
     public void deleteMaquina(long idF, ViewGroup parent) {
+        mediaPlayer = MediaPlayer.create(getActivity(), R.raw.suspdef);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
         context = parent.getContext();
         bdCursorDelete(idF);
         String nomF, numF;
@@ -264,14 +267,20 @@ public class MaquinaFragment extends Fragment {
                 "-Nom client: " + nomF + "\n" +
                 "-Número serie: " + numF;
         alertadd.setMessage(missatgeAenviar);
+
         alertadd.setNeutralButton("Si!", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dlg, int sumthin) {
                 MaquinaFragment.bdEliminar(idF);
                 filtreAplicat = filtratge.FILTRE_TOT;
                 actualitzarMaquines();
+                mediaPlayer.stop();
             }
         });
-        alertadd.setNegativeButton("No", null);
+        alertadd.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dlg, int sumthin) {
+                        mediaPlayer.stop();
+                    }
+                });
         alertadd.show();
 
     }
@@ -436,7 +445,7 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
         super(context, layout, c, from, to, flags);
         aTiconMaquina = frag;
     }
-
+    MediaPlayer mediaPlayer;
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
@@ -450,6 +459,7 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
                 aTiconMaquina.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
+
             }
         });
         imageTrucada.setOnClickListener(new View.OnClickListener() {
