@@ -3,35 +3,54 @@ package com.example.david_projectefinal.ui.tipus;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
+import com.madrapps.pikolo.ColorPicker;
+import com.madrapps.pikolo.HSLColorPicker;
+import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
+
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class TipusFragment extends Fragment {
+    int mDefaultColor;
+    String colorBDTipus="";
+    TextView tvColor;
+    Button btnSelectColorBg;
     String[] columnesTipus = new String[]{
             BuidemDataSource.iD,
-            BuidemDataSource.nomT
+            BuidemDataSource.nomT,
+            BuidemDataSource.colorT
 
     };
     int[] toTipus = new int[]{
             R.id.lblId,
-            R.id.lblNomTipu
+            R.id.lblNomTipu,
+            R.id.lblColor
     };
     static String nom;
     ListView listView;
@@ -67,7 +86,7 @@ public class TipusFragment extends Fragment {
 
         View v2 = inflater.inflate(R.layout.add_tipus, null);
 
-
+        butonColor(v2);
         final EditText etNomTip = v2.findViewById(R.id.etZonaNom);
         Tipus.setView(v2).setPositiveButton("Afegir Tipus", new DialogInterface.OnClickListener() {
             @Override
@@ -78,7 +97,7 @@ public class TipusFragment extends Fragment {
                     return;
                 }
 
-                bd.addTipus(nomTipus);
+                bd.addTipus(nomTipus,colorBDTipus);
                 actualitzarTipus();
 
             }
@@ -87,6 +106,37 @@ public class TipusFragment extends Fragment {
         AlertDialog dialog = Tipus.create();
         dialog.show();
 
+    }
+    public void butonColor(View v2)
+    {
+        Button btnSelectColorBg = (Button)v2.findViewById(R.id.btnSelectColorBg);
+
+        mDefaultColor = ContextCompat.getColor(getContext(),R.color.design_default_color_primary);
+        btnSelectColorBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openColorPicker(v2);
+            }
+
+        });
+    }
+    public void openColorPicker(View v2)
+    {
+        tvColor = (TextView)v2.findViewById(R.id.idColorView);
+        AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(getContext(), mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+
+            }
+
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int color) {
+                mDefaultColor = color;
+                colorBDTipus = String.valueOf(color);
+                tvColor.setBackgroundColor(mDefaultColor);
+            }
+        });
+        colorPicker.show();
     }
     private void actualitzarTipus() {
 
@@ -139,6 +189,7 @@ public class TipusFragment extends Fragment {
 
         Cursor updateTipus = bd.agafarTipusUn(id);
         updateTipus.moveToFirst();
+        butonColor(v2);
         TextView titol = (TextView)v2.findViewById(R.id.idBuscar);
         titol.setText("Actualitzar tipus");
         final EditText etNom = v2.findViewById(R.id.etZonaNom);
@@ -155,7 +206,7 @@ public class TipusFragment extends Fragment {
                     return;
                 }
 
-                bd.updateTipus(id, nom);
+                bd.updateTipus(id, nom,colorBDTipus);
                 actualitzarTipus();
             }
         });

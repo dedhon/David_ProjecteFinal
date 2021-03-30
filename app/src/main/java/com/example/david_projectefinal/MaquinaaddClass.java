@@ -174,9 +174,6 @@ public class MaquinaaddClass extends AppCompatActivity {
                 arrayAdapterZonas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, auxListZonasFinal);
             }
         }
-
-
-
         //Inflem els spinners amb els adaptadors
         tipus.setAdapter(arrayAdapterTipus);
         zones.setAdapter(arrayAdapterZonas);

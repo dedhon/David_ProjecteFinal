@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:id="@+id/layout"
     android:orientation="vertical" >
 <LinearLayout
     android:orientation="vertical"
@@ -33,6 +34,20 @@
         android:layout_marginBottom="4dp"
         android:hint="Nom Tipus"
         android:inputType="text" />
+
+    <TextView
+        android:id="@+id/idColorView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Color triat" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSelectColorBg"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Selecció color"
+        app:cornerRadius="4dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

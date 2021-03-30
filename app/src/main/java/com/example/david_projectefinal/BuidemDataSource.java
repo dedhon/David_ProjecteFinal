@@ -32,7 +32,7 @@ public class BuidemDataSource {
 
     public static final String tipusBuidem = "tipus";
     public static final String nomT = "NomTipus";
-
+    public static final String colorT = "ColorTipus";
 
 
     private BuidemSLOpenHelper dbBuidemSLOpenHelper;
@@ -62,6 +62,14 @@ public class BuidemDataSource {
             null,
             null,
             nomM);
+    }
+    public Cursor ordenarMix() {
+        return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
+                null,
+                null,
+                null,
+                null,
+                zonaForeign + "," + poblacioM + "," +adreçaM);
     }
     public Cursor ordenarZona() {
         return dbR.query(MaquinaBuidem, new String[]{iD,nomM,adreçaM,codiPostalM,poblacioM,tlfM,emailM,numM,dataM,tipusForeign,zonaForeign},
@@ -178,14 +186,15 @@ public class BuidemDataSource {
                 null, null, null);
 
     }
-    public long addTipus(String nom) {
+    public long addTipus(String nom,String color) {
         ContentValues values = new ContentValues();
         values.put(nomT, nom);
+        values.put(colorT, color);
 
         return dbW.insert(tipusBuidem, null, values);
     }
     public Cursor mostrarAllTipus() {
-        return dbR.query(tipusBuidem, new String[]{iD,nomT},
+        return dbR.query(tipusBuidem, new String[]{iD,nomT,colorT},
                 null,
                 null,
                 null,
@@ -196,10 +205,10 @@ public class BuidemDataSource {
     public void eliminarTipus(long id) {
         dbW.delete(tipusBuidem,iD + " = ?", new String[] { String.valueOf(id) });
     }
-    public void updateTipus(long id,String nom ) {
+    public void updateTipus(long id,String nom, String color ) {
         ContentValues values = new ContentValues();
         values.put(nomT, nom);
-
+        values.put(colorT, color);
         dbW.update(tipusBuidem, values, iD + " = ?", new String[]{String.valueOf(id)});
     }
     //////////////////////////////////////////////////////Zones

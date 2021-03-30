@@ -161,7 +161,6 @@ public class MaquinaFragment extends Fragment {
         buscador.setNegativeButton("Cancelar", null);
         AlertDialog dialog = buscador.create();
         dialog.show();
-
     }
     public void demanarPermisos()
     {
@@ -185,6 +184,7 @@ public class MaquinaFragment extends Fragment {
     {
         List<CharSequence> list = new ArrayList<CharSequence>();
         list.add("Nom Client");
+        list.add("Zona, Població i Adreça");
         list.add("Zona");
         list.add("Població");
         list.add("Adreça");
@@ -215,6 +215,10 @@ public class MaquinaFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if(dialogList[pos].equals("Nom Client")){
                             filtreAplicat = filtratge.FILTRE_NOM;
+                            actualitzarMaquines();
+                        }
+                        if(dialogList[pos].equals("Zona, Població i Adreça")){
+                            filtreAplicat = filtratge.FILTRE_MIX;
                             actualitzarMaquines();
                         }
                         if(dialogList[pos].equals("Zona")){
@@ -339,7 +343,10 @@ public class MaquinaFragment extends Fragment {
                                 aux = bd.ordenarData();
                             }
                             else{
-
+                                if(filtreAplicat.equals(filtratge.FILTRE_MIX))
+                                {
+                                    aux = bd.ordenarMix();
+                                }
                             }
                         }
                     }
@@ -411,6 +418,9 @@ public class MaquinaFragment extends Fragment {
         switch (filtreAplicat) {
             case FILTRE_TOT:
                 cursorMaquines = bd.mostrarAllMaquines();
+                break;
+            case FILTRE_MIX:
+                cursorMaquines = bd.ordenarMix();
                 break;
             case FILTRE_NOM:
                  cursorMaquines = bd.ordenarNom();

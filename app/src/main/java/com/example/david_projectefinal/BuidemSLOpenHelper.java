@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class BuidemSLOpenHelper extends SQLiteOpenHelper {
 
 
-    private static final int VERSIO_DATABASE = 1;
+    private static final int VERSIO_DATABASE = 3;
 
     // database name
     private static final String NOM_DATABASE = "BuidemCompany";
@@ -21,13 +21,14 @@ public class BuidemSLOpenHelper extends SQLiteOpenHelper {
 
         String CREATE_TIPUS =
                 "CREATE TABLE tipus ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "NomTipus TEXT)";
+                        "NomTipus TEXT NOT NULL," +
+                        "ColorTipus TEXT)";
 
         BuidemCompany.execSQL(CREATE_TIPUS);
 
         String CREATE_ZONES =
                 "CREATE TABLE zones ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "NomZona TEXT)";
+                        "NomZona TEXT NOT NULL)";
 
         BuidemCompany.execSQL(CREATE_ZONES);
         String CREATE_MAQUINES =
