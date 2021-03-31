@@ -94,6 +94,14 @@ public class ZonaFragment extends Fragment {
                     Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                else{
+                    boolean compNomZ = bd.mirarNomZonaRepe(nomZona);
+                    if(compNomZ == false)
+                    {
+                        Toast.makeText(getContext(), "El nom de la zona ja existeix!!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
                 bd.addZonas(nomZona);
                 actualitzarZona();
 
@@ -153,8 +161,12 @@ public class ZonaFragment extends Fragment {
                     Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                boolean aux = bd.updateZones(id, nom);
+                if(aux==true)
+                {
+                    Toast.makeText(getContext(), "El nom de la zona ja existeix!!", Toast.LENGTH_SHORT).show();
+                }
 
-                bd.updateZones(id, nom);
                 actualitzarZona();
             }
         });

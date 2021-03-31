@@ -118,6 +118,7 @@
 
     </LinearLayout>
 
+
     <TextView
         android:id="@+id/etTipus"
         android:textAlignment="center"
@@ -128,13 +129,25 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:hint="Tipus" />
-
-    <Spinner
-        android:id="@+id/TipusSpinner"
-        android:textAlignment="center"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
+        <Spinner
+            android:id="@+id/TipusSpinner"
+            android:layout_width="327dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:id="@+id/iVaddTipsAux"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/addtipaux" />
+
+    </LinearLayout>
     <TextView
         android:id="@+id/tvZona"
         android:textAlignment="center"
@@ -145,13 +158,24 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:hint="Zona" />
-
-    <Spinner
-        android:id="@+id/ZonaSpinner"
-        android:textAlignment="center"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
+        <Spinner
+            android:id="@+id/ZonaSpinner"
+            android:layout_width="327dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+    <ImageView
+        android:id="@+id/iVaddZonaAux"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/addtipaux" />
+
+</LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"

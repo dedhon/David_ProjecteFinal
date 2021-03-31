@@ -1,4 +1,5 @@
 package com.example.david_projectefinal;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -6,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class BuidemSLOpenHelper extends SQLiteOpenHelper {
 
 
-    private static final int VERSIO_DATABASE = 3;
+    private static final int VERSIO_DATABASE = 1;
 
     // database name
     private static final String NOM_DATABASE = "BuidemCompany";
@@ -21,14 +22,14 @@ public class BuidemSLOpenHelper extends SQLiteOpenHelper {
 
         String CREATE_TIPUS =
                 "CREATE TABLE tipus ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "NomTipus TEXT NOT NULL," +
+                        "NomTipus TEXT NOT NULL UNIQUE," +
                         "ColorTipus TEXT)";
 
         BuidemCompany.execSQL(CREATE_TIPUS);
 
         String CREATE_ZONES =
                 "CREATE TABLE zones ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "NomZona TEXT NOT NULL)";
+                        "NomZona TEXT NOT NULL UNIQUE)";
 
         BuidemCompany.execSQL(CREATE_ZONES);
         String CREATE_MAQUINES =
@@ -39,11 +40,11 @@ public class BuidemSLOpenHelper extends SQLiteOpenHelper {
                         "Poblacio TEXT NOT NULL," +
                         "Telefon TEXT," +
                         "Email TEXT," +
-                        "NumMaquina TEXT NOT NULL," +
+                        "NumMaquina TEXT NOT NULL UNIQUE," +
                         "DataRevisio TEXT NOT NULL," +
                         "Tipus INTEGER NOT NULL," +
                         "Zona INTEGER NOT NULL," +
-                        "FOREIGN KEY (Tipus) REFERENCES tipus(_id), "+
+                        "FOREIGN KEY (Tipus) REFERENCES tipus(_id), " +
                         "FOREIGN KEY (Zona) REFERENCES zones(_id))";
 
         BuidemCompany.execSQL(CREATE_MAQUINES);

@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
+import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
 import com.madrapps.pikolo.ColorPicker;
@@ -38,14 +39,13 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class TipusFragment extends Fragment {
     int mDefaultColor;
-    String colorBDTipus="";
+    String colorBDTipus = "";
     TextView tvColor;
     Button btnSelectColorBg;
     String[] columnesTipus = new String[]{
             BuidemDataSource.iD,
             BuidemDataSource.nomT,
             BuidemDataSource.colorT
-
     };
     int[] toTipus = new int[]{
             R.id.lblId,
@@ -58,6 +58,7 @@ public class TipusFragment extends Fragment {
     public static BuidemDataSource bd;
     ImageView addTipus;
     private filtratge filtreAplicat;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -79,8 +80,8 @@ public class TipusFragment extends Fragment {
             }
         });
     }
-    public void crearTipus()
-    {
+
+    public void crearTipus() {
         AlertDialog.Builder Tipus = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
@@ -93,13 +94,17 @@ public class TipusFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 String nomTipus = etNomTip.getText().toString();
                 if (nomTipus.trim().equals("")) {
-                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
+                } else {
+                    boolean compNom = bd.mirarNomTipusRepe(nomTipus);
+                    if (compNom == false) {
+                        Toast.makeText(getContext(), "El nom del tipus ja existeix!!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
-
-                bd.addTipus(nomTipus,colorBDTipus);
+                bd.addTipus(nomTipus, colorBDTipus);
                 actualitzarTipus();
-
             }
         });
         Tipus.setNegativeButton("Cancelar", null);
@@ -107,11 +112,11 @@ public class TipusFragment extends Fragment {
         dialog.show();
 
     }
-    public void butonColor(View v2)
-    {
-        Button btnSelectColorBg = (Button)v2.findViewById(R.id.btnSelectColorBg);
 
-        mDefaultColor = ContextCompat.getColor(getContext(),R.color.design_default_color_primary);
+    public void butonColor(View v2) {
+        Button btnSelectColorBg = (Button) v2.findViewById(R.id.btnSelectColorBg);
+
+        mDefaultColor = ContextCompat.getColor(getContext(), R.color.design_default_color_primary);
         btnSelectColorBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,9 +125,9 @@ public class TipusFragment extends Fragment {
 
         });
     }
-    public void openColorPicker(View v2)
-    {
-        tvColor = (TextView)v2.findViewById(R.id.idColorView);
+
+    public void openColorPicker(View v2) {
+        tvColor = (TextView) v2.findViewById(R.id.idColorView);
         AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(getContext(), mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onCancel(AmbilWarnaDialog dialog) {
@@ -132,12 +137,13 @@ public class TipusFragment extends Fragment {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 mDefaultColor = color;
-                colorBDTipus = String.valueOf(color);
+                colorBDTipus = String.format("#%06X", (0xFFFFFF & color));
                 tvColor.setBackgroundColor(mDefaultColor);
             }
         });
         colorPicker.show();
     }
+
     private void actualitzarTipus() {
 
         // Demanem totes les tasques
@@ -154,6 +160,7 @@ public class TipusFragment extends Fragment {
         dataAdapter.changeCursor(cursorMaquines);
         dataAdapter.notifyDataSetChanged();
     }
+
     public void implementacioListView(View root) {
         //Definim una imatge per aplicarli amb el GLIDE un GIF a la imatge
         ImageView adtipus = (ImageView) root.findViewById(R.id.imageAddTipus);
@@ -168,7 +175,7 @@ public class TipusFragment extends Fragment {
                 cursor,
                 columnesTipus,
                 toTipus,
-                1,TipusFragment.this);
+                1, TipusFragment.this);
 
         listView.setAdapter(dataAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -179,8 +186,8 @@ public class TipusFragment extends Fragment {
             }
         });
     }
-    public void editarTipus(long id)
-    {
+
+    public void editarTipus(long id) {
 
         AlertDialog.Builder Tipus = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
@@ -190,7 +197,7 @@ public class TipusFragment extends Fragment {
         Cursor updateTipus = bd.agafarTipusUn(id);
         updateTipus.moveToFirst();
         butonColor(v2);
-        TextView titol = (TextView)v2.findViewById(R.id.idBuscar);
+        TextView titol = (TextView) v2.findViewById(R.id.idBuscar);
         titol.setText("Actualitzar tipus");
         final EditText etNom = v2.findViewById(R.id.etZonaNom);
         etNom.setText(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.nomT)));
@@ -199,14 +206,16 @@ public class TipusFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                int codiConvert=0;
+                int codiConvert = 0;
                 String nom = etNom.getText().toString();
                 if (nom.trim().equals("")) {
-                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                bd.updateTipus(id, nom,colorBDTipus);
+                boolean aux = bd.updateTipus(id, nom, colorBDTipus);
+                if (aux == true) {
+                    Toast.makeText(getContext(), "El nom del tipus ja existeix!!", Toast.LENGTH_SHORT).show();
+                }
                 actualitzarTipus();
             }
         });
@@ -222,9 +231,11 @@ public class TipusFragment extends Fragment {
         nom = cursor.getString(cursor.getColumnIndex(BuidemDataSource.nomT));
 
     }
+
     private static void bdEliminarTipus(long idF) {
         bd.eliminarTipus(idF);
     }
+
     public void deleteTipus(long idF, ViewGroup parent) {
 
         bdCursorDelete(idF);
@@ -237,7 +248,7 @@ public class TipusFragment extends Fragment {
         ImageView segur = (ImageView) view.findViewById(R.id.dialog_imageview);
         Glide.with(getContext()).load(R.drawable.segurgif).into(segur);
         alertadd.setView(view);
-        String missatgeAenviar="¿Estas segur que vols eliminar el tipus amb les següents dades:?" + "\n" +
+        String missatgeAenviar = "¿Estas segur que vols eliminar el tipus amb les següents dades:?" + "\n" +
                 "-ID Tipus: " + idF + "\n" +
                 "-Nom Tipus: " + nomF + "\n";
         alertadd.setMessage(missatgeAenviar);
@@ -245,16 +256,13 @@ public class TipusFragment extends Fragment {
             public void onClick(DialogInterface dlg, int sumthin) {
                 boolean buscaEiliminar = bd.mirarSiTipusAssignat(idF);
 
-                if(buscaEiliminar==false)
-                {
+                if (buscaEiliminar == false) {
                     TipusFragment.bdEliminarTipus(idF);
                     filtreAplicat = filtratge.FILTRE_TOT;
                     actualitzarTipus();
-                }
-                else{
-                    if(buscaEiliminar==true)
-                    {
-                        Toast.makeText(getContext(),"El tipus de màquina esta assignat, no pots eliminarlo!!", Toast.LENGTH_LONG).show();
+                } else {
+                    if (buscaEiliminar == true) {
+                        Toast.makeText(getContext(), "El tipus de màquina esta assignat, no pots eliminarlo!!", Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -266,6 +274,7 @@ public class TipusFragment extends Fragment {
 
     }
 }
+
 class adaptadorTipus extends android.widget.SimpleCursorAdapter {
 
     private static final String colorTaskPending = "#F04C4C";
@@ -278,11 +287,25 @@ class adaptadorTipus extends android.widget.SimpleCursorAdapter {
         aTiconTipus = frag;
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
+        Cursor curAux = aTiconTipus.bd.mostrarAllTipus();
+        TextView filaColor = (TextView) view.findViewById(R.id.lblColor);
+        curAux.moveToFirst();
 
+
+        while(curAux.moveToNext())
+        {
+            if(curAux.getString(curAux.getColumnIndex(BuidemDataSource.nomT)).equalsIgnoreCase(curAux.getString(curAux.getColumnIndex(BuidemDataSource.nomT))))
+            {
+                filaColor.setBackgroundColor(Color.parseColor(curAux.getString(curAux.getColumnIndex(BuidemDataSource.colorT))));
+            }
+        }
         ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete1234);
+
+
         botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
