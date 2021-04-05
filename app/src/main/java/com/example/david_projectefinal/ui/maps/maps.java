@@ -30,8 +30,8 @@ import java.util.List;
 
 public class maps extends Fragment {
     String ciutat1;
-   // private String coordenadesCiutat;
     List<Address> adress = null;
+    int maxResultados = 1;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -47,8 +47,9 @@ public class maps extends Fragment {
         public void onMapReady(GoogleMap googleMap) {
             //agafarNom();
             Geocoder geo = new Geocoder(getContext());
-            int maxResultados = 1;
-             ciutat1 = "mataro";
+
+            //ciutat1 = "mataro";
+
             try {
                 adress = geo.getFromLocationName(ciutat1, maxResultados);
             } catch (IOException e) {
@@ -56,7 +57,7 @@ public class maps extends Fragment {
             }
             LatLng ciutat = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
             googleMap.addMarker(new MarkerOptions().position(ciutat).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(ciutat));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ciutat,10));
         }
     };
     public void agafarNom()
@@ -90,8 +91,20 @@ public class maps extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ciutat1 = getArguments().getString("nom");
+
+        /*Bundle datosRecuperados = getArguments();
+        if (datosRecuperados == null) {
+            // No hay datos, manejar excepción
+            return;
+        }
+
+        // Y ahora puedes recuperar usando get en lugar de put
+
+        String nombre = datosRecuperados.getString("nom");*/
+
         SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map44);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }

@@ -449,7 +449,6 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
     }
 
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
@@ -469,18 +468,24 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
         });
         botoEnviarMaps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-/*
+
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
 
 
-                maps fragmento = new maps();
+
+               /* MaquinaFragment fragment = new MaquinaFragment();
+                Bundle args = new Bundle();
+                args.putString("nom", "galicia");
+                fragment.setArguments(args);*/
+
+               /* maps fragmento = new maps();
                 Bundle b = new Bundle();
                 b.putString("nom", "madrid");
 
                 fragmento.setArguments(b);
                 FragmentTransaction tr = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
-                tr.replace(R.id.nav_host_fragment, fragmento);
+                tr.replace(R.id.map44, fragmento);
                 tr.addToBackStack(null).commit();
                 Bundle result = new Bundle();
                 result.putString("bundleKey", "result");
@@ -499,8 +504,6 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 enviarEmail(view, position, aTiconMaquina.getContext());
             }
         });
-
-
         return view;
     }
 
@@ -518,7 +521,6 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
             aTiconMaquina.startActivity(Intent.createChooser(email, "Choose an Email client :"));
         } else {
             Toast.makeText(context, "No hi ha e-mail al que enviar un correu!!", Toast.LENGTH_SHORT).show();
-
         }
     }
 

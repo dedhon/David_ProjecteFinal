@@ -41,7 +41,6 @@ public class TipusFragment extends Fragment {
     int mDefaultColor;
     String colorBDTipus = "";
     TextView tvColor;
-    Button btnSelectColorBg;
     String[] columnesTipus = new String[]{
             BuidemDataSource.iD,
             BuidemDataSource.nomT,
@@ -110,7 +109,6 @@ public class TipusFragment extends Fragment {
         Tipus.setNegativeButton("Cancelar", null);
         AlertDialog dialog = Tipus.create();
         dialog.show();
-
     }
 
     public void butonColor(View v2) {
@@ -154,7 +152,6 @@ public class TipusFragment extends Fragment {
             case FILTRE_TOT:
                 cursorMaquines = bd.mostrarAllTipus();
                 break;
-
         }
         // Now create a simple cursor adapter and set it to display
         dataAdapter.changeCursor(cursorMaquines);
@@ -202,16 +199,21 @@ public class TipusFragment extends Fragment {
         final EditText etNom = v2.findViewById(R.id.etZonaNom);
         etNom.setText(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.nomT)));
 
+        /*String colorHexa = "#DB1760";
+        int colorInt = Color.parseColor(colorHexa);
+        tvColor.setBackgroundColor(colorInt);*/
+
         Tipus.setView(v2).setPositiveButton("Modificar Tipus", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                int codiConvert = 0;
+                //Comprobem que el nom al ser obligatori, tingui algun contingut
                 String nom = etNom.getText().toString();
                 if (nom.trim().equals("")) {
                     Toast.makeText(getContext(), "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                //Comprobem que el nom introduit no estigui repetit
                 boolean aux = bd.updateTipus(id, nom, colorBDTipus);
                 if (aux == true) {
                     Toast.makeText(getContext(), "El nom del tipus ja existeix!!", Toast.LENGTH_SHORT).show();
@@ -222,7 +224,6 @@ public class TipusFragment extends Fragment {
         Tipus.setNegativeButton("Cancelar", null);
         AlertDialog dialog = Tipus.create();
         dialog.show();
-
     }
 
     private static void bdCursorDelete(long idF) {

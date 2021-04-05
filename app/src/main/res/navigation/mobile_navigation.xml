@@ -26,5 +26,9 @@
         android:id="@+id/navigation_maps"
         android:name="com.example.david_projectefinal.ui.maps.maps"
         android:label="Maps"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps" >
+        <argument
+            android:name="myArg"
+            app:argType="string" />
+    </fragment>
 </navigation>
