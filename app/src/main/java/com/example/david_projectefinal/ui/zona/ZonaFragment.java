@@ -67,6 +67,7 @@ public class ZonaFragment extends Fragment {
         filtreAplicat = filtratge.FILTRE_TOT;
         implementacioListView(root);
         addZona(root);
+
         return root;
     }
     public void addZona(View v) {
@@ -250,6 +251,9 @@ class adaptadorZona extends android.widget.SimpleCursorAdapter {
                 aTiconZona.deleteZona(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
             }
         });
+       /* Bundle result = new Bundle();
+        result.putString("bundleKey", "result");
+        getParentFragmentManager().setFragmentResult("requestKey", result);*/
         return view;
     }
 

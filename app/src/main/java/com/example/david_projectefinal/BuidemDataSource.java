@@ -59,7 +59,7 @@ public class BuidemDataSource {
         dbR.close();
     }
 
-    /////////////Consultes MAQUINES//////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////Consultes MAQUINES//////////////////////////////////////////
     //Secció consultes d'ordenació
     public Cursor ordenarNom() {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
@@ -198,7 +198,7 @@ public class BuidemDataSource {
         return dbW.insert(MaquinaBuidem, null, values);
     }
 
-    //////////////////////////////////////////////////////Tipus
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////Tipus
     //Mirem si la maquina te un número de serie repetit
     public boolean mirarNomTipusRepe(String nom) {
         boolean contingut = false;
@@ -268,7 +268,7 @@ public class BuidemDataSource {
         return estat;
     }
 
-    //////////////////////////////////////////////////////Zones
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////Zones
     public boolean mirarNomZonaRepe(String nom) {
         boolean contingut = false;
         Cursor cuirAux = dbR.query(zonesBuidem, new String[]{iD, nomZ},

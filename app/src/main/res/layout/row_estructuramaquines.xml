@@ -5,8 +5,7 @@
     android:id="@+id/layout_container1"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="5dp">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/my_layout3"

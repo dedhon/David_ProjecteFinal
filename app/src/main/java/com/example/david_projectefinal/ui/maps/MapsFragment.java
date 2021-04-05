@@ -32,9 +32,9 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            LatLng mataro = new LatLng(41.54211, 2.4445);
+            googleMap.addMarker(new MarkerOptions().position(mataro).title("Marker in mataro"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(mataro));
         }
     };
 
@@ -43,7 +43,7 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps2, container, false);
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override

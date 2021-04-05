@@ -21,18 +21,23 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
+import com.example.david_projectefinal.ui.maps.maps;
+import com.example.david_projectefinal.ui.zona.ZonaFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +49,7 @@ public class MaquinaFragment extends Fragment {
     Context context;
     int pos = 0;
     static String nom, numSerie;
-    String dataFINAL;
+
     private filtratge filtreAplicat;
 
     MediaPlayer mediaPlayer;
@@ -443,7 +448,7 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
         aTiconMaquina = frag;
     }
 
-    MediaPlayer mediaPlayer;
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -452,6 +457,7 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
         ImageView imageEmail = (ImageView) view.findViewById(R.id.imgEmail);
         ImageView imageTrucada = (ImageView) view.findViewById(R.id.imgTlf);
         ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete123);
+        ImageView botoEnviarMaps = (ImageView) view.findViewById(R.id.imgMaps);
         botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -459,6 +465,26 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 Cursor linia = (Cursor) getItem(position);
                 aTiconMaquina.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
 
+            }
+        });
+        botoEnviarMaps.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+/*
+                // Carrego la linia del cursor de la posició.
+                Cursor linia = (Cursor) getItem(position);
+
+
+                maps fragmento = new maps();
+                Bundle b = new Bundle();
+                b.putString("nom", "madrid");
+
+                fragmento.setArguments(b);
+                FragmentTransaction tr = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
+                tr.replace(R.id.nav_host_fragment, fragmento);
+                tr.addToBackStack(null).commit();
+                Bundle result = new Bundle();
+                result.putString("bundleKey", "result");
+                aTiconMaquina.getParentFragmentManager().setFragmentResult("requestKey", result);*/
             }
         });
         imageTrucada.setOnClickListener(new View.OnClickListener() {
@@ -473,6 +499,7 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 enviarEmail(view, position, aTiconMaquina.getContext());
             }
         });
+
 
         return view;
     }
