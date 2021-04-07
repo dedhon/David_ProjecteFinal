@@ -471,8 +471,34 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
 
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
+                // Crea el nuevo fragmento y la transacción.
 
 
+                Fragment nuevoFragmento = new maps();
+                Bundle b = new Bundle();
+                b.putString("nom", "toledo");
+
+                nuevoFragmento.setArguments(b);
+                FragmentTransaction fragmentTransaction = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, nuevoFragmento);
+                fragmentTransaction.addToBackStack(null);
+
+                // Commit a la transacción
+                fragmentTransaction.commit();
+/*
+                Fragment myFragment  = new Fragment();
+                FragmentTransaction fragmentTransaction = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.nav_host_fragment, myFragment);
+                        fragmentTransaction.addToBackStack("youfragment");
+                fragmentTransaction.commit();
+*/
+               /* Bundle bundle = new Bundle();
+                String nomCity;
+                nomCity = "galicia";
+                bundle.putString("maps", nomCity);
+                Intent intent = new Intent(aTiconMaquina.getActivity(), MaquinaaddClass.class);
+                intent.putExtras(bundle);
+                aTiconMaquina.startActivity(intent);*/
 
                /* MaquinaFragment fragment = new MaquinaFragment();
                 Bundle args = new Bundle();
@@ -491,6 +517,8 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 result.putString("bundleKey", "result");
                 aTiconMaquina.getParentFragmentManager().setFragmentResult("requestKey", result);*/
             }
+
+
         });
         imageTrucada.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

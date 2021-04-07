@@ -48,7 +48,7 @@ public class maps extends Fragment {
             //agafarNom();
             Geocoder geo = new Geocoder(getContext());
 
-            //ciutat1 = "mataro";
+           // ciutat1 = "madrid";
 
             try {
                 adress = geo.getFromLocationName(ciutat1, maxResultados);
