@@ -17,11 +17,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
+import com.example.david_projectefinal.ui.maps.maps;
 import com.example.david_projectefinal.ui.tipus.TipusFragment;
 
 
@@ -243,12 +245,31 @@ class adaptadorZona extends android.widget.SimpleCursorAdapter {
         View view = super.getView(position, convertView, parent);
 
         ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete12345);
+        ImageView botoMaps = (ImageView) view.findViewById(R.id.imgMapsZona);
         botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
                 aTiconZona.deleteZona(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
+            }
+        });
+        botoMaps.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                // Carrego la linia del cursor de la posició.
+                Cursor linia = (Cursor) getItem(position);
+                Fragment nuevoFragmento = new maps();
+                Bundle b = new Bundle();
+                b.putString("nom", "granada");
+
+                nuevoFragmento.setArguments(b);
+                FragmentTransaction fragmentTransaction = aTiconZona.getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, nuevoFragmento);
+                fragmentTransaction.addToBackStack(null);
+
+                // Commit a la transacción
+                fragmentTransaction.commit();
             }
         });
        /* Bundle result = new Bundle();

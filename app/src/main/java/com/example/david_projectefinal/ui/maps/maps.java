@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class maps extends Fragment {
-    String ciutat1;
+    String ciutat1 = null;
     List<Address> adress = null;
     int maxResultados = 1;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -49,7 +49,10 @@ public class maps extends Fragment {
             Geocoder geo = new Geocoder(getContext());
 
            // ciutat1 = "madrid";
-
+            if(ciutat1 == null)
+            {
+                ciutat1 = "madrid";
+            }
             try {
                 adress = geo.getFromLocationName(ciutat1, maxResultados);
             } catch (IOException e) {
@@ -91,7 +94,12 @@ public class maps extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ciutat1 = getArguments().getString("nom");
+
+            ciutat1 = getArguments().getString("nom");
+
+
+
+
 
         /*Bundle datosRecuperados = getArguments();
         if (datosRecuperados == null) {

@@ -143,6 +143,12 @@ public class MaquinaFragment extends Fragment {
         return myview;
     }
 
+    public Cursor buscarMaquinas(long id)
+    {
+        Cursor auxMaqui = bd.agafarMaquinaUna(id);
+
+        return auxMaqui;
+    }
     public void buscarMaquinaFiltre() {
         AlertDialog.Builder buscador = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
@@ -471,12 +477,15 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
 
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
+                long id =linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD));
+
+                Cursor auxMaqui = aTiconMaquina.buscarMaquinas(id);
+                auxMaqui.moveToFirst();
+                String nomCity = auxMaqui.getString(auxMaqui.getColumnIndex(BuidemDataSource.poblacioM));
                 // Crea el nuevo fragmento y la transacción.
-
-
                 Fragment nuevoFragmento = new maps();
                 Bundle b = new Bundle();
-                b.putString("nom", "toledo");
+                b.putString("nom", nomCity);
 
                 nuevoFragmento.setArguments(b);
                 FragmentTransaction fragmentTransaction = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
@@ -485,13 +494,13 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
 
                 // Commit a la transacción
                 fragmentTransaction.commit();
-/*
+                /*
                 Fragment myFragment  = new Fragment();
                 FragmentTransaction fragmentTransaction = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.add(R.id.nav_host_fragment, myFragment);
                         fragmentTransaction.addToBackStack("youfragment");
                 fragmentTransaction.commit();
-*/
+                */
                /* Bundle bundle = new Bundle();
                 String nomCity;
                 nomCity = "galicia";
