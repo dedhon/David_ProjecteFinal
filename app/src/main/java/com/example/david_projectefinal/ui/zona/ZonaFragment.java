@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
@@ -31,11 +32,9 @@ public class ZonaFragment extends Fragment {
     public static BuidemDataSource bd;
     static String nom;
     String[] columnesZones = new String[]{
-            BuidemDataSource.iD,
             BuidemDataSource.nomZ
     };
     int[] toZones = new int[]{
-            R.id.lblIdzona,
             R.id.lblNomZona
     };
     ListView listView;
@@ -230,9 +229,6 @@ public class ZonaFragment extends Fragment {
 }
 class adaptadorZona extends android.widget.SimpleCursorAdapter {
 
-    private static final String colorTaskPending = "#F04C4C";
-    private static final String colorTaskCompleted = "#FFFFFF";
-
     private ZonaFragment aTiconZona;
 
     public adaptadorZona(Context context, int layout, Cursor c, String[] from, int[] to, int flags, ZonaFragment fragZ) {
@@ -259,7 +255,12 @@ class adaptadorZona extends android.widget.SimpleCursorAdapter {
 
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
-                Fragment nuevoFragmento = new maps();
+
+                NavHostFragment.findNavController(aTiconZona.getParentFragment()).navigate(R.id.action_navigation_zona_to_navigation_maps);
+
+
+
+              /*  Fragment nuevoFragmento = new maps();
                 Bundle b = new Bundle();
                 b.putString("nom", "granada");
 
@@ -269,7 +270,7 @@ class adaptadorZona extends android.widget.SimpleCursorAdapter {
                 fragmentTransaction.addToBackStack(null);
 
                 // Commit a la transacción
-                fragmentTransaction.commit();
+                fragmentTransaction.commit();*/
             }
         });
        /* Bundle result = new Bundle();

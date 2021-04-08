@@ -95,7 +95,7 @@ public class maps extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-            ciutat1 = getArguments().getString("nom");
+//            ciutat1 = getArguments().getString("nom");
 
 
 

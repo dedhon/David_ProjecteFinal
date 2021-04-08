@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class BuidemSLOpenHelper extends SQLiteOpenHelper {
 
 
-    private static final int VERSIO_DATABASE = 1;
+    private static final int VERSIO_DATABASE = 2;
 
     // database name
     private static final String NOM_DATABASE = "BuidemCompany";

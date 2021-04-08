@@ -9,7 +9,12 @@
         android:id="@+id/navigation_maquina"
         android:name="com.example.david_projectefinal.ui.maquina.MaquinaFragment"
         android:label="Maquines"
-        tools:layout="@layout/fragment_maquina" />
+        tools:layout="@layout/fragment_maquina" >
+
+        <action
+            android:id="@+id/action_navigation_maquina_to_navigation_maps"
+            app:destination="@id/navigation_maps" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_tipus"
@@ -21,14 +26,21 @@
         android:id="@+id/navigation_zona"
         android:name="com.example.david_projectefinal.ui.zona.ZonaFragment"
         android:label="Zones"
-        tools:layout="@layout/fragment_zona" />
+        tools:layout="@layout/fragment_zona" >
+        <action
+            android:id="@+id/action_navigation_zona_to_navigation_maps"
+            app:destination="@id/navigation_maps" />
+    </fragment>
+
     <fragment
         android:id="@+id/navigation_maps"
         android:name="com.example.david_projectefinal.ui.maps.maps"
         android:label="Maps"
         tools:layout="@layout/fragment_maps" >
-        <argument
-            android:name="myArg"
-            app:argType="string" />
+
     </fragment>
+    <action
+        android:id="@+id/action_global_navigation_maps"
+        app:destination="@id/navigation_maps" />
+
 </navigation>

@@ -30,24 +30,26 @@ import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
 import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
+import com.example.david_projectefinal.TipusMaquina;
 import com.example.david_projectefinal.filtratge;
 import com.madrapps.pikolo.ColorPicker;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
+import java.util.ArrayList;
+
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class TipusFragment extends Fragment {
+    View vadapter;
     int mDefaultColor;
     String colorBDTipus = "";
     TextView tvColor;
     String[] columnesTipus = new String[]{
-            BuidemDataSource.iD,
             BuidemDataSource.nomT,
             BuidemDataSource.colorT
     };
     int[] toTipus = new int[]{
-            R.id.lblId,
             R.id.lblNomTipu,
             R.id.lblColor
     };
@@ -126,6 +128,7 @@ public class TipusFragment extends Fragment {
 
     public void openColorPicker(View v2) {
         tvColor = (TextView) v2.findViewById(R.id.idColorView);
+
         AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(getContext(), mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onCancel(AmbilWarnaDialog dialog) {
@@ -179,29 +182,47 @@ public class TipusFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> listView, View view,
                                     int position, long id) {
-                editarTipus(id);
+                Cursor curA = bd.agafarTipusUn(id);
+
+                curA.moveToFirst();
+                String colorin = curA.getString(2);
+                editarTipus(id,colorin);
             }
         });
     }
 
-    public void editarTipus(long id) {
+    public void editarTipus(long id,String color) {
 
         AlertDialog.Builder Tipus = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
 
         View v2 = inflater.inflate(R.layout.add_tipus, null);
+        tvColor = (TextView) v2.findViewById(R.id.idColorView);
 
         Cursor updateTipus = bd.agafarTipusUn(id);
         updateTipus.moveToFirst();
         butonColor(v2);
         TextView titol = (TextView) v2.findViewById(R.id.idBuscar);
         titol.setText("Actualitzar tipus");
+       /* if (updateTipus != null && updateTipus.moveToFirst())
+        {
+            tvColor.setBackgroundColor(Color.parseColor(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.colorT))));
+        }*/
+
+
+
         final EditText etNom = v2.findViewById(R.id.etZonaNom);
         etNom.setText(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.nomT)));
+        String colorHexa = color;
+        if(colorHexa.equalsIgnoreCase(""))
+        {
 
-        /*String colorHexa = "#DB1760";
-        int colorInt = Color.parseColor(colorHexa);
-        tvColor.setBackgroundColor(colorInt);*/
+        }
+        else{
+            int colorInt = Color.parseColor(colorHexa);
+            tvColor.setBackgroundColor(colorInt);
+        }
+
 
         Tipus.setView(v2).setPositiveButton("Modificar Tipus", new DialogInterface.OnClickListener() {
             @Override
@@ -278,9 +299,6 @@ public class TipusFragment extends Fragment {
 
 class adaptadorTipus extends android.widget.SimpleCursorAdapter {
 
-    private static final String colorTaskPending = "#F04C4C";
-    private static final String colorTaskCompleted = "#FFFFFF";
-
     private TipusFragment aTiconTipus;
 
     public adaptadorTipus(Context context, int layout, Cursor c, String[] from, int[] to, int flags, TipusFragment frag) {
@@ -294,19 +312,30 @@ class adaptadorTipus extends android.widget.SimpleCursorAdapter {
         View view = super.getView(position, convertView, parent);
         Cursor curAux = aTiconTipus.bd.mostrarAllTipus();
         TextView filaColor = (TextView) view.findViewById(R.id.lblColor);
-        curAux.moveToFirst();
 
-
+        Cursor linia =(Cursor) getItem(position);
+        String proba1 = linia.getString(linia.getColumnIndex(BuidemDataSource.colorT));
         while(curAux.moveToNext())
         {
-            if(curAux.getString(curAux.getColumnIndex(BuidemDataSource.nomT)).equalsIgnoreCase(curAux.getString(curAux.getColumnIndex(BuidemDataSource.nomT))))
+            if(proba1!=null)
             {
-                filaColor.setBackgroundColor(Color.parseColor(curAux.getString(curAux.getColumnIndex(BuidemDataSource.colorT))));
+                if(proba1.equalsIgnoreCase(curAux.getString(curAux.getColumnIndex(BuidemDataSource.colorT))))
+                {
+                    String contingutFinal="";
+                    contingutFinal = filaColor.getText().toString();
+                    if(contingutFinal.equalsIgnoreCase(""))
+                    {
+
+                    }else{
+                        filaColor.setBackgroundColor(Color.parseColor(curAux.getString(curAux.getColumnIndex(BuidemDataSource.colorT))));
+                    }
+                }
             }
+
+
+
         }
         ImageView botoEliminarProducte = (ImageView) view.findViewById(R.id.imgdelete1234);
-
-
         botoEliminarProducte.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 

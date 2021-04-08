@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/my_layout3"
         android:layout_width="wrap_content"
-        android:layout_height="264dp"
+        android:layout_height="271dp"
         android:background="#393736"
         android:orientation="vertical">
 
@@ -35,7 +35,7 @@
     <LinearLayout
         android:id="@+id/my_layout2"
         android:layout_width="291dp"
-        android:layout_height="wrap_content"
+        android:layout_height="271dp"
         android:background="#FFEB3B"
         android:orientation="vertical">
 
@@ -43,67 +43,49 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
-                android:text="ID: "
-                android:textSize="18sp"
-                android:textStyle="bold|italic" />
-
-            <TextView
-                android:id="@+id/lblId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#CDDC39"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
                 android:text="Nom client: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblNomCli"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
                 android:text="Adreça: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblAdreça"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
 
 
         </LinearLayout>
@@ -111,195 +93,210 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
                 android:text="Codi postal: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblCodiPostal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
 
                 android:text="Població: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblPobla"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
 
                 android:text="Telefon: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblTlf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
 
                 android:text="E-mail: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
 
                 android:text="Número Serie: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblNumSer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
 
                 android:text="Data última revisió: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblDataUR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
 
                 android:text="Tipus: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblTipus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CDDC39"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#00BCD4"
+                android:background="#FFFFFF"
 
                 android:text="Zona: "
-                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/lblZona"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
+                android:layout_marginLeft="2dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="264dp"
+        android:layout_height="271dp"
         android:background="#393736"
         android:orientation="vertical">
-
         <ImageView
             android:id="@+id/imgMaps"
             android:layout_width="55dp"

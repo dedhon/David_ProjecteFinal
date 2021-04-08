@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.BuidemDataSource;
@@ -55,7 +56,6 @@ public class MaquinaFragment extends Fragment {
     MediaPlayer mediaPlayer;
     //Contingut adapter per listview
     String[] columnesMaquina = new String[]{
-            BuidemDataSource.iD,
             BuidemDataSource.nomM,
             BuidemDataSource.adreçaM,
             BuidemDataSource.codiPostalM,
@@ -68,7 +68,6 @@ public class MaquinaFragment extends Fragment {
             BuidemDataSource.zonaForeign
     };
     int[] toMaquina = new int[]{
-            R.id.lblId,
             R.id.lblNomCli,
             R.id.lblAdreça,
             R.id.lblCodiPostal,
@@ -444,9 +443,6 @@ public class MaquinaFragment extends Fragment {
 
 class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
 
-    private static final String colorTaskPending = "#F04C4C";
-    private static final String colorTaskCompleted = "#FFFFFF";
-
     private MaquinaFragment aTiconMaquina;
 
     public adapterTodoIcon(Context context, int layout, Cursor c, String[] from, int[] to, int flags, MaquinaFragment frag) {
@@ -478,7 +474,7 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
                 long id =linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD));
-
+/*
                 Cursor auxMaqui = aTiconMaquina.buscarMaquinas(id);
                 auxMaqui.moveToFirst();
                 String nomCity = auxMaqui.getString(auxMaqui.getColumnIndex(BuidemDataSource.poblacioM));
@@ -493,7 +489,15 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 fragmentTransaction.addToBackStack(null);
 
                 // Commit a la transacción
-                fragmentTransaction.commit();
+                fragmentTransaction.commit();*/
+                NavHostFragment.findNavController(aTiconMaquina.getParentFragment()).navigate(R.id.action_navigation_maquina_to_navigation_maps);
+
+
+
+
+
+
+
                 /*
                 Fragment myFragment  = new Fragment();
                 FragmentTransaction fragmentTransaction = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();

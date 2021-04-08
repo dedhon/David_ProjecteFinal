@@ -228,7 +228,7 @@ public class BuidemDataSource {
     }
 
     public Cursor agafarTipusUn(long id) {
-        return dbR.query(tipusBuidem, new String[]{iD, nomT},
+        return dbR.query(tipusBuidem, new String[]{iD, nomT,colorT},
                 iD + "=?", new String[]{String.valueOf(id)},
                 null, null, null);
 
