@@ -62,41 +62,72 @@ public class BuidemDataSource {
     ///////////////////////////////////////////////////////////////////////////////////////////////////Consultes MAQUINES//////////////////////////////////////////
     //Secció consultes d'ordenació
     public Cursor ordenarNom() {
+        final String MY_QUERY = "SELECT maq._id,Nom,Adreça,CodiPostal,Poblacio,Telefon,Email,NumMaquina,DataRevisio,ti.NomTipus,zo.NomZona FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id ORDER BY maq.Nom";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+    /*public Cursor ordenarNom() {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
                 null,
                 null,
                 null,
                 null,
                 nomM);
-    }
+    }*/
 
     public Cursor ordenarMix() {
+        final String MY_QUERY = "SELECT maq._id,Nom,Adreça,CodiPostal,Poblacio,Telefon,Email,NumMaquina,DataRevisio,ti.NomTipus,zo.NomZona FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id ORDER BY zo.NomZona,maq.Poblacio,maq.Adreça";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+    /*public Cursor ordenarMix() {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
                 null,
                 null,
                 null,
                 null,
                 zonaForeign + "," + poblacioM + "," + adreçaM);
-    }
+    }*/
 
     public Cursor ordenarZona() {
+        final String MY_QUERY = "SELECT maq._id,Nom,Adreça,CodiPostal,Poblacio,Telefon,Email,NumMaquina,DataRevisio,ti.NomTipus,zo.NomZona FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id ORDER BY zo.NomZona";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+    /*public Cursor ordenarZona() {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
                 null,
                 null,
                 null,
                 null,
                 zonaForeign);
-    }
+    }*/
 
     public Cursor ordenarPoblacio() {
+        final String MY_QUERY = "SELECT maq._id,Nom,Adreça,CodiPostal,Poblacio,Telefon,Email,NumMaquina,DataRevisio,ti.NomTipus,zo.NomZona FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id ORDER BY maq.Poblacio";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+    /*public Cursor ordenarPoblacio() {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
                 null,
                 null,
                 null,
                 null,
                 poblacioM);
-    }
+    }*/
 
+    public Cursor ordenarAdreça() {
+        final String MY_QUERY = "SELECT maq._id,Nom,Adreça,CodiPostal,Poblacio,Telefon,Email,NumMaquina,DataRevisio,ti.NomTipus,zo.NomZona FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id ORDER BY maq.Adreça";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+    /*
     public Cursor ordenarAdreça() {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
                 null,
@@ -104,24 +135,36 @@ public class BuidemDataSource {
                 null,
                 null,
                 adreçaM);
-    }
+    }*/
 
     public Cursor ordenarData() {
+        final String MY_QUERY = "SELECT maq._id,Nom,Adreça,CodiPostal,Poblacio,Telefon,Email,NumMaquina,DataRevisio,ti.NomTipus,zo.NomZona FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id ORDER BY maq.DataRevisio";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+   /* public Cursor ordenarData() {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
                 null,
                 null,
                 null,
                 null,
                 dataM);
-    }
+    }*/
 
     /////////Seccio filtratge màquines
     public Cursor filtrarNumSerie(String nums) {
-        final String MY_QUERY = "SELECT * FROM maquines WHERE NumMaquina LIKE '%" + nums + "%'";
+        final String MY_QUERY = "SELECT maq._id,Nom,Adreça,CodiPostal,Poblacio,Telefon,Email,NumMaquina,DataRevisio,ti.NomTipus,zo.NomZona FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id WHERE NumMaquina LIKE '%" + nums + "%'" + " ORDER BY maq.Nom";
 
         return dbR.rawQuery(MY_QUERY, null);
 
     }
+
+    /*public Cursor filtrarNumSerie2(String nums) {
+        final String MY_QUERY = "SELECT * FROM maquines WHERE NumMaquina LIKE '%" + nums + "%'";
+
+        return dbR.rawQuery(MY_QUERY, null);
+    }*/
 
     //Mirem si la maquina te un número de serie repetit
     public boolean mirarNumSerieRepe(String numS) {
@@ -141,19 +184,27 @@ public class BuidemDataSource {
     public Cursor agafarMaquinaUna(long id) {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
                 iD + "=?", new String[]{String.valueOf(id)},
-                null, null, null);
+                null, null, nomM);
 
     }
 
     //Agafem totes les maquines
     public Cursor mostrarAllMaquines() {
+        final String MY_QUERY = "SELECT maq._id,Nom,Adreça,CodiPostal,Poblacio,Telefon,Email,NumMaquina,DataRevisio,ti.NomTipus,zo.NomZona FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id ORDER BY maq.Nom";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+   /* public Cursor mostrarAllMaquines() {
         return dbR.query(MaquinaBuidem, new String[]{iD, nomM, adreçaM, codiPostalM, poblacioM, tlfM, emailM, numM, dataM, tipusForeign, zonaForeign},
                 null,
                 null,
                 null,
                 null,
-                iD);
-    }
+                nomM);
+    }*/
+
+
 
     //Eliminem maquina amb un id
     public void eliminarMaquina(long id) {
@@ -230,7 +281,7 @@ public class BuidemDataSource {
     public Cursor agafarTipusUn(long id) {
         return dbR.query(tipusBuidem, new String[]{iD, nomT,colorT},
                 iD + "=?", new String[]{String.valueOf(id)},
-                null, null, null);
+                null, null, nomT);
 
     }
 
@@ -248,7 +299,7 @@ public class BuidemDataSource {
                 null,
                 null,
                 null,
-                iD);
+                nomT);
     }
 
     public void eliminarTipus(long id) {
@@ -299,7 +350,7 @@ public class BuidemDataSource {
     public Cursor agafarZonesUn(long id) {
         return dbR.query(zonesBuidem, new String[]{iD, nomZ},
                 iD + "=?", new String[]{String.valueOf(id)},
-                null, null, null);
+                null, null, nomZ);
 
     }
 
@@ -316,7 +367,7 @@ public class BuidemDataSource {
                 null,
                 null,
                 null,
-                iD);
+                nomZ);
     }
 
     public void eliminarZones(long id) {

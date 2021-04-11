@@ -9,6 +9,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -69,18 +72,25 @@ public class TipusFragment extends Fragment {
         filtreAplicat = filtratge.FILTRE_TOT;
 
         implementacioListView(root);
-        addTipus(root);
+        setHasOptionsMenu(true);
         return root;
     }
-
-    public void addTipus(View v) {
-        addTipus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                crearTipus();
-            }
-        });
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_actionbar_tipus, menu);
     }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.addMacT: {
+                crearTipus();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     public void crearTipus() {
         AlertDialog.Builder Tipus = new AlertDialog.Builder(getContext());
@@ -162,9 +172,7 @@ public class TipusFragment extends Fragment {
     }
 
     public void implementacioListView(View root) {
-        //Definim una imatge per aplicarli amb el GLIDE un GIF a la imatge
-        ImageView adtipus = (ImageView) root.findViewById(R.id.imageAddTipus);
-        Glide.with(getContext()).load(R.drawable.addmac).into(adtipus);
+
         //Instanciem el listView
         listView = (ListView) root.findViewById(R.id.list1);
 
@@ -204,12 +212,6 @@ public class TipusFragment extends Fragment {
         butonColor(v2);
         TextView titol = (TextView) v2.findViewById(R.id.idBuscar);
         titol.setText("Actualitzar tipus");
-       /* if (updateTipus != null && updateTipus.moveToFirst())
-        {
-            tvColor.setBackgroundColor(Color.parseColor(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.colorT))));
-        }*/
-
-
 
         final EditText etNom = v2.findViewById(R.id.etZonaNom);
         etNom.setText(updateTipus.getString(updateTipus.getColumnIndex(BuidemDataSource.nomT)));
@@ -270,8 +272,8 @@ public class TipusFragment extends Fragment {
         ImageView segur = (ImageView) view.findViewById(R.id.dialog_imageview);
         Glide.with(getContext()).load(R.drawable.segurgif).into(segur);
         alertadd.setView(view);
-        String missatgeAenviar = "¿Estas segur que vols eliminar el tipus amb les següents dades:?" + "\n" +
-                "-ID Tipus: " + idF + "\n" +
+        String missatgeAenviar = "¿Estas segur que vols eliminar el tipus amb les següents dades:?" + "\n" + " " + "\n" +
+
                 "-Nom Tipus: " + nomF + "\n";
         alertadd.setMessage(missatgeAenviar);
         alertadd.setNeutralButton("Si!", new DialogInterface.OnClickListener() {
@@ -312,7 +314,7 @@ class adaptadorTipus extends android.widget.SimpleCursorAdapter {
         View view = super.getView(position, convertView, parent);
         Cursor curAux = aTiconTipus.bd.mostrarAllTipus();
         TextView filaColor = (TextView) view.findViewById(R.id.lblColor);
-
+        TextView filaTipus = (TextView) view.findViewById(R.id.lblNomTipu);
         Cursor linia =(Cursor) getItem(position);
         String proba1 = linia.getString(linia.getColumnIndex(BuidemDataSource.colorT));
         while(curAux.moveToNext())
@@ -328,6 +330,7 @@ class adaptadorTipus extends android.widget.SimpleCursorAdapter {
 
                     }else{
                         filaColor.setBackgroundColor(Color.parseColor(curAux.getString(curAux.getColumnIndex(BuidemDataSource.colorT))));
+                        filaTipus.setBackgroundColor(Color.parseColor(curAux.getString(curAux.getColumnIndex(BuidemDataSource.colorT))));
                     }
                 }
             }

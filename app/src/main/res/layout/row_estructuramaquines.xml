@@ -52,7 +52,7 @@
                 android:layout_marginLeft="2dp"
                 android:background="#FFFFFF"
                 android:text="Nom client: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -61,7 +61,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,7 +79,7 @@
                 android:layout_marginLeft="2dp"
                 android:background="#FFFFFF"
                 android:text="Adreça: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -85,7 +88,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
 
 
         </LinearLayout>
@@ -102,7 +108,7 @@
                 android:layout_marginLeft="2dp"
                 android:background="#FFFFFF"
                 android:text="Codi postal: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -111,7 +117,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
 
         </LinearLayout>
 
@@ -128,7 +137,7 @@
                 android:background="#FFFFFF"
 
                 android:text="Població: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -137,7 +146,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -153,7 +165,7 @@
                 android:background="#FFFFFF"
 
                 android:text="Telefon: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -162,7 +174,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -178,7 +193,7 @@
                 android:background="#FFFFFF"
 
                 android:text="E-mail: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -187,7 +202,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -203,7 +221,7 @@
                 android:background="#FFFFFF"
 
                 android:text="Número Serie: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -212,7 +230,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -228,7 +249,7 @@
                 android:background="#FFFFFF"
 
                 android:text="Data última revisió: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -237,7 +258,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -253,7 +277,7 @@
                 android:background="#FFFFFF"
 
                 android:text="Tipus: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -262,7 +286,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -278,7 +305,7 @@
                 android:background="#FFFFFF"
 
                 android:text="Zona: "
-                android:textColor="#000000"
+                android:textColor="#535151"
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
@@ -287,7 +314,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:textSize="18sp" />
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
     </LinearLayout>

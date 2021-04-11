@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -57,28 +60,35 @@ public class ZonaFragment extends Fragment {
         dataAdapter.changeCursor(cursorMaquines);
         dataAdapter.notifyDataSetChanged();
     }
-
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_actionbar_zona, menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.addMacZ: {
+                crearZona();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_zona, container, false);
-        addZona = (ImageView) root.findViewById(R.id.imageAddZona);
+
         bd = new BuidemDataSource(getContext());
         filtreAplicat = filtratge.FILTRE_TOT;
         implementacioListView(root);
-        addZona(root);
 
+        setHasOptionsMenu(true);
         return root;
     }
-    public void addZona(View v) {
-        addZona.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                crearZona();
-            }
-        });
-    }
+
     public void crearZona()
     {
         AlertDialog.Builder Zona = new AlertDialog.Builder(getContext());
@@ -115,9 +125,7 @@ public class ZonaFragment extends Fragment {
 
     }
     public void implementacioListView(View root) {
-        //Definim una imatge per aplicarli amb el GLIDE un GIF a la imatge
-        ImageView adzona = (ImageView) root.findViewById(R.id.imageAddZona);
-        Glide.with(getContext()).load(R.drawable.addmac).into(adzona);
+
         //Instanciem el listView
         listView = (ListView) root.findViewById(R.id.list1);
 
@@ -198,8 +206,8 @@ public class ZonaFragment extends Fragment {
         ImageView segur = (ImageView) view.findViewById(R.id.dialog_imageview);
         Glide.with(getContext()).load(R.drawable.segurgif).into(segur);
         alertadd.setView(view);
-        String missatgeAenviar="¿Estas segur que vols eliminar la zona amb les següents dades:?" + "\n" +
-                "-ID Zona: " + idF + "\n" +
+        String missatgeAenviar="¿Estas segur que vols eliminar la zona amb les següents dades:?" + "\n" + " " + "\n" +
+
                 "-Nom Zona: " + nomF + "\n";
         alertadd.setMessage(missatgeAenviar);
         alertadd.setNeutralButton("Si!", new DialogInterface.OnClickListener() {

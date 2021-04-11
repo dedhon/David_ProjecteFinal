@@ -64,8 +64,8 @@ public class MaquinaFragment extends Fragment {
             BuidemDataSource.emailM,
             BuidemDataSource.numM,
             BuidemDataSource.dataM,
-            BuidemDataSource.tipusForeign,
-            BuidemDataSource.zonaForeign
+            BuidemDataSource.nomT,
+            BuidemDataSource.nomZ
     };
     int[] toMaquina = new int[]{
             R.id.lblNomCli,
@@ -100,7 +100,7 @@ public class MaquinaFragment extends Fragment {
     ////////////////
 
     //Image views
-    ImageView addMaquina, deleteMaquina, imageTrucada;
+    ImageView addMaquina, deleteMaquina;
     public static BuidemDataSource bd;
     public static adapterTodoIcon dataAdapter;
 
@@ -115,6 +115,10 @@ public class MaquinaFragment extends Fragment {
             }
             case R.id.filtrar: {
                 buscarMaquinaFiltre();
+                return true;
+            }
+            case R.id.addMac: {
+                dialogAddMaquina();
                 return true;
             }
             default:
@@ -137,7 +141,7 @@ public class MaquinaFragment extends Fragment {
 
         deleteMaquina = (ImageView) myview.findViewById(R.id.imgdelete123);
         implementacioListView(myview);
-        addMaquinaButon(myview);
+
         setHasOptionsMenu(true);
         return myview;
     }
@@ -276,8 +280,8 @@ public class MaquinaFragment extends Fragment {
         ImageView segur = (ImageView) view.findViewById(R.id.dialog_imageview);
         Glide.with(getContext()).load(R.drawable.segurgif).into(segur);
         alertadd.setView(view);
-        String missatgeAenviar = "¿Estas segur que vols eliminar la màquina amb les següents dades:?" + "\n" +
-                "-ID Màquina: " + idF + "\n" +
+        String missatgeAenviar = "¿Estas segur que vols eliminar la màquina amb les següents dades:?"  + "\n" + " " + "\n" +
+
                 "-Nom client: " + nomF + "\n" +
                 "-Número serie: " + numF;
         alertadd.setMessage(missatgeAenviar);
@@ -312,14 +316,7 @@ public class MaquinaFragment extends Fragment {
     }
 
 
-    public void addMaquinaButon(View v) {
-        addMaquina.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogAddMaquina();
-            }
-        });
-    }
+
 
     public Cursor primeraCarregaCursor() {
         Cursor aux = null;
@@ -354,9 +351,7 @@ public class MaquinaFragment extends Fragment {
     }
 
     public void implementacioListView(View myview) {
-        //Definim una imatge per aplicarli amb el GLIDE un GIF a la imatge
-        addMaquina = (ImageView) myview.findViewById(R.id.imageAddMaquina);
-        Glide.with(getContext()).load(R.drawable.addmac).into(addMaquina);
+
         //Instanciem el listView
         listView = (ListView) myview.findViewById(R.id.list1);
 

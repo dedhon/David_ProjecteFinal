@@ -49,16 +49,16 @@ public class maps extends Fragment {
             Geocoder geo = new Geocoder(getContext());
 
            // ciutat1 = "madrid";
-            if(ciutat1 == null)
-            {
+           // if(ciutat1 == null)
+            //{
                 ciutat1 = "madrid";
-            }
+            //}
             try {
                 adress = geo.getFromLocationName(ciutat1, maxResultados);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            LatLng ciutat = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
+            LatLng ciutat = new LatLng(41.54211, 2.4445);
             googleMap.addMarker(new MarkerOptions().position(ciutat).title("Marker in Sydney"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ciutat,10));
         }
