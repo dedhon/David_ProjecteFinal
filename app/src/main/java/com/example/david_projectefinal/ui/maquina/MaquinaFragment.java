@@ -433,7 +433,11 @@ public class MaquinaFragment extends Fragment {
         dataAdapter.changeCursor(cursorMaquines);
         dataAdapter.notifyDataSetChanged();
     }
-
+    public Cursor enviarCity(long id)
+    {
+        Cursor aux = (Cursor) bd.agafarMaquinaUna(id);
+        return aux;
+    }
 }
 
 class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
@@ -469,61 +473,18 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
                 long id =linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD));
-/*
-                Cursor auxMaqui = aTiconMaquina.buscarMaquinas(id);
-                auxMaqui.moveToFirst();
-                String nomCity = auxMaqui.getString(auxMaqui.getColumnIndex(BuidemDataSource.poblacioM));
-                // Crea el nuevo fragmento y la transacción.
-                Fragment nuevoFragmento = new maps();
+
+                Cursor auxCurs = aTiconMaquina.enviarCity(id);
+                auxCurs.moveToFirst();
+                String nomCity = auxCurs.getString(auxCurs.getColumnIndex(BuidemDataSource.poblacioM));
+
                 Bundle b = new Bundle();
-                b.putString("nom", nomCity);
+                String[] nomIcolor = new String[2];
+                nomIcolor[0]=nomCity;
+                nomIcolor[1]=
+                b.putStringArray("nom", nomCity);
+                NavHostFragment.findNavController(aTiconMaquina.getParentFragment()).navigate(R.id.action_navigation_maquina_to_navigation_maps,b);
 
-                nuevoFragmento.setArguments(b);
-                FragmentTransaction fragmentTransaction = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment, nuevoFragmento);
-                fragmentTransaction.addToBackStack(null);
-
-                // Commit a la transacción
-                fragmentTransaction.commit();*/
-                NavHostFragment.findNavController(aTiconMaquina.getParentFragment()).navigate(R.id.action_navigation_maquina_to_navigation_maps);
-
-
-
-
-
-
-
-                /*
-                Fragment myFragment  = new Fragment();
-                FragmentTransaction fragmentTransaction = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.nav_host_fragment, myFragment);
-                        fragmentTransaction.addToBackStack("youfragment");
-                fragmentTransaction.commit();
-                */
-               /* Bundle bundle = new Bundle();
-                String nomCity;
-                nomCity = "galicia";
-                bundle.putString("maps", nomCity);
-                Intent intent = new Intent(aTiconMaquina.getActivity(), MaquinaaddClass.class);
-                intent.putExtras(bundle);
-                aTiconMaquina.startActivity(intent);*/
-
-               /* MaquinaFragment fragment = new MaquinaFragment();
-                Bundle args = new Bundle();
-                args.putString("nom", "galicia");
-                fragment.setArguments(args);*/
-
-               /* maps fragmento = new maps();
-                Bundle b = new Bundle();
-                b.putString("nom", "madrid");
-
-                fragmento.setArguments(b);
-                FragmentTransaction tr = aTiconMaquina.getActivity().getSupportFragmentManager().beginTransaction();
-                tr.replace(R.id.map44, fragmento);
-                tr.addToBackStack(null).commit();
-                Bundle result = new Bundle();
-                result.putString("bundleKey", "result");
-                aTiconMaquina.getParentFragmentManager().setFragmentResult("requestKey", result);*/
             }
 
 
