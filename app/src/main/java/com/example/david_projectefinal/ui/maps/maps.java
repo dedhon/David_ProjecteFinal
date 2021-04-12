@@ -1,5 +1,7 @@
 package com.example.david_projectefinal.ui.maps;
 
+import android.database.Cursor;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.david_projectefinal.BuidemDataSource;
+import com.example.david_projectefinal.DadaMaps;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.ui.maquina.MaquinaFragment;
 import com.example.david_projectefinal.ui.zona.ZonaFragment;
@@ -22,16 +26,24 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class maps extends Fragment {
+    public BuidemDataSource bd;
     String ciutat1 = null;
     List<Address> adress = null;
     int maxResultados = 1;
+    String[] dadesRebudes;
+    ArrayList<DadaMaps> dades;
+    private ArrayList<LatLng> locationArrayList;
+    String marksVaries;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -48,38 +60,91 @@ public class maps extends Fragment {
             //agafarNom();
             Geocoder geo = new Geocoder(getContext());
 
-           // ciutat1 = "madrid";
-            if(ciutat1 == null)
+
+            if(dadesRebudes!=null)
             {
-                ciutat1 = "madrid";
+                try {
+                    adress = geo.getFromLocationName(ciutat1, maxResultados);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                LatLng ciutat = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(ciutat).icon(getMarkerIcon(dadesRebudes[2])).title(dadesRebudes[3] + ", " + dadesRebudes[4]));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ciutat,10));
             }
-            try {
-                adress = geo.getFromLocationName(ciutat1, maxResultados);
-            } catch (IOException e) {
-                e.printStackTrace();
+            else{
+                if(marksVaries!=null)
+                {
+                    for(int i =0; i < dades.size();i++)
+                    {
+
+                        try {
+                            adress = geo.getFromLocationName(dades.get(i).getPob(), maxResultados);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        LatLng ciutat = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
+                        googleMap.addMarker(new MarkerOptions().position(ciutat).icon(getMarkerIcon(dades.get(i).getColor())).title(dades.get(i).getNumS() + ", " + dades.get(i).getNomT()));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ciutat,10));
+                    }
+                }
+                else{
+                    try {
+                        adress = geo.getFromLocationName(ciutat1, maxResultados);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LatLng ciutat = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(ciutat).title("Madrid"));
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ciutat,5));
+                }
             }
-            LatLng ciutat = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
-            googleMap.addMarker(new MarkerOptions().position(ciutat).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ciutat,10));
         }
     };
+    public BitmapDescriptor getMarkerIcon(String color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(Color.parseColor(color), hsv);
+        return BitmapDescriptorFactory.defaultMarker(hsv[0]);
+    }
     public void agafarNom()
     {
-       /* Bundle datosRecuperados = getArguments();
-        if (datosRecuperados == null) {
-            // No hay datos, manejar excepción
-            return;
+        marksVaries = "";
+        dadesRebudes = new String[5];
+        locationArrayList = new ArrayList<>();
+        if(getArguments()!=null)
+        {
+            dadesRebudes = getArguments().getStringArray("nom");
+            marksVaries = getArguments().getString("nomZ");
         }
-        ciutat1 = "mataro";//datosRecuperados.getString("nom");
-
-        getParentFragmentManager().setFragmentResultListener("key", this, new MaquinaFragment() {
-            @Override
-            public void onFragmentResult(@NonNull String key, @NonNull Bundle bundle) {
-                // We use a String here, but any type that can be put in a Bundle is supported
-                String result = bundle.getString("bundleKey");
-                // Do something with the result...
+        else{
+            dadesRebudes = null;
+            marksVaries = null;
+        }
+        if(dadesRebudes!=null)
+        {
+            ciutat1= dadesRebudes[1];
+        }
+        else{
+            if(marksVaries!=null)
+            {
+                long aux = Long.parseLong(marksVaries);
+                Cursor curPoblAll = bd.agafarPoblacionsZones(aux);
+                dades = new ArrayList<DadaMaps>();
+                DadaMaps objDades;
+                while(curPoblAll.moveToNext())
+                {
+                    String pob = curPoblAll.getString(curPoblAll.getColumnIndex(BuidemDataSource.poblacioM));
+                    String numSer = curPoblAll.getString(curPoblAll.getColumnIndex(BuidemDataSource.numM));
+                    String nomT = curPoblAll.getString(curPoblAll.getColumnIndex(BuidemDataSource.nomT));
+                    String color = curPoblAll.getString(curPoblAll.getColumnIndex(BuidemDataSource.colorT));
+                    objDades = new DadaMaps(pob,numSer,nomT,color);
+                    dades.add(objDades);
+                }
             }
-        });*/
+            else{
+                ciutat1= "Madrid";
+            }
+        }
     }
     @Nullable
     @Override
@@ -87,29 +152,17 @@ public class maps extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        bd = new BuidemDataSource(getContext());
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-            ciutat1 = getArguments().getString("nom");
-
-
-
-
-
-        /*Bundle datosRecuperados = getArguments();
-        if (datosRecuperados == null) {
-            // No hay datos, manejar excepción
-            return;
-        }
-
-        // Y ahora puedes recuperar usando get en lugar de put
-
-        String nombre = datosRecuperados.getString("nom");*/
+        agafarNom();
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map44);

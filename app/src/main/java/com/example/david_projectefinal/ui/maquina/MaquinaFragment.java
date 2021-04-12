@@ -438,6 +438,11 @@ public class MaquinaFragment extends Fragment {
         Cursor aux = (Cursor) bd.agafarMaquinaUna(id);
         return aux;
     }
+    public Cursor agafarColor(long id)
+    {
+        Cursor aux = (Cursor) bd.agafarTipusUn(id);
+        return aux;
+    }
 }
 
 class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
@@ -477,16 +482,24 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 Cursor auxCurs = aTiconMaquina.enviarCity(id);
                 auxCurs.moveToFirst();
                 String nomCity = auxCurs.getString(auxCurs.getColumnIndex(BuidemDataSource.poblacioM));
+                String numSer = auxCurs.getString(auxCurs.getColumnIndex(BuidemDataSource.numM));
 
+                long idDeforeign = auxCurs.getInt(auxCurs.getColumnIndex(BuidemDataSource.tipusForeign));
+                Cursor auxCur2 = aTiconMaquina.agafarColor(idDeforeign);
+                auxCur2.moveToFirst();
+                String color = auxCur2.getString(auxCur2.getColumnIndex(BuidemDataSource.colorT));
+                String tipusMaq = auxCur2.getString(auxCur2.getColumnIndex(BuidemDataSource.nomT));
                 Bundle b = new Bundle();
-                String[] nomIcolor = new String[2];
-                nomIcolor[0]=nomCity;
-                nomIcolor[1]=
-                b.putStringArray("nom", nomCity);
+                String[] nomIcolor = new String[5];
+                nomIcolor[0]="1";
+                nomIcolor[1]=nomCity;
+                nomIcolor[2]=color;
+                nomIcolor[3]=numSer;
+                nomIcolor[4]=tipusMaq;
+                b.putStringArray("nom", nomIcolor);
                 NavHostFragment.findNavController(aTiconMaquina.getParentFragment()).navigate(R.id.action_navigation_maquina_to_navigation_maps,b);
 
             }
-
 
         });
         imageTrucada.setOnClickListener(new View.OnClickListener() {

@@ -30,6 +30,8 @@ import com.example.david_projectefinal.filtratge;
 import com.example.david_projectefinal.ui.maps.maps;
 import com.example.david_projectefinal.ui.tipus.TipusFragment;
 
+import java.util.ArrayList;
+
 
 public class ZonaFragment extends Fragment {
     public static BuidemDataSource bd;
@@ -41,7 +43,7 @@ public class ZonaFragment extends Fragment {
             R.id.lblNomZona
     };
     ListView listView;
-    ImageView addZona;
+
 
     public static adaptadorZona dataAdapter;
     private filtratge filtreAplicat;
@@ -264,21 +266,13 @@ class adaptadorZona extends android.widget.SimpleCursorAdapter {
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
 
-                NavHostFragment.findNavController(aTiconZona.getParentFragment()).navigate(R.id.action_navigation_zona_to_navigation_maps);
-
-
-
-              /*  Fragment nuevoFragmento = new maps();
                 Bundle b = new Bundle();
-                b.putString("nom", "granada");
+                String nomIcolor = null;
+                nomIcolor=String.valueOf(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)));
+                b.putString("nomZ", nomIcolor);
 
-                nuevoFragmento.setArguments(b);
-                FragmentTransaction fragmentTransaction = aTiconZona.getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment, nuevoFragmento);
-                fragmentTransaction.addToBackStack(null);
+                NavHostFragment.findNavController(aTiconZona.getParentFragment()).navigate(R.id.action_navigation_zona_to_navigation_maps,b);
 
-                // Commit a la transacción
-                fragmentTransaction.commit();*/
             }
         });
        /* Bundle result = new Bundle();

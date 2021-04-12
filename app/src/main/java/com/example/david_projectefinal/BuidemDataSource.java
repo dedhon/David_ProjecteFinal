@@ -320,6 +320,15 @@ public class BuidemDataSource {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////Zones
+
+    public Cursor agafarPoblacionsZones(long idAbusc) {
+        final String MY_QUERY = "SELECT Poblacio,NumMaquina,ti.NomTipus,ti.ColorTipus FROM maquines AS maq INNER JOIN zones AS zo ON maq.Zona = zo._id INNER JOIN tipus AS ti ON maq.Tipus = ti._id WHERE maq.Zona =" + idAbusc + " ORDER BY maq.Nom";
+
+        return dbR.rawQuery(MY_QUERY, null);
+
+    }
+
+
     public boolean mirarNomZonaRepe(String nom) {
         boolean contingut = false;
         Cursor cuirAux = dbR.query(zonesBuidem, new String[]{iD, nomZ},
