@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -22,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -39,6 +39,7 @@ import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
 import com.example.david_projectefinal.ui.maps.maps;
 import com.example.david_projectefinal.ui.zona.ZonaFragment;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,26 +80,36 @@ public class MaquinaFragment extends Fragment {
             R.id.lblTipus,
             R.id.lblZona
     };
+    Snackbar snackbar;
+    final String colorVermell = "#FF0000";
+    final String colorVerd = "#4BFE26";
     private static int ADD_MAQUINA = 1;
     private static int UPDATA_MAQUINA = 2;
-
+    public void missatgeSnackBar(View v, String missatge, String color) {
+        snackbar = Snackbar.make(v, missatge, Snackbar.LENGTH_SHORT);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(Color.parseColor(color));
+        snackbar.show();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_MAQUINA) {
             if (resultCode == RESULT_OK) {
                 filtreAplicat = filtratge.FILTRE_TOT;
                 actualitzarMaquines();
+                missatgeSnackBar(myview, "Maquina creada correctament!!", colorVerd);
             }
         }
         if (requestCode == UPDATA_MAQUINA) {
             if (resultCode == RESULT_OK) {
                 filtreAplicat = filtratge.FILTRE_TOT;
                 actualitzarMaquines();
+                missatgeSnackBar(myview, "Maquina actualitzada correctament!!", colorVerd);
             }
         }
     }
     ////////////////
-
+    View myview;
     //Image views
     ImageView addMaquina, deleteMaquina;
     public static BuidemDataSource bd;
@@ -136,7 +147,7 @@ public class MaquinaFragment extends Fragment {
         //Instanciem la base de dades amb aquest contexte
         bd = new BuidemDataSource(getContext());
         //Definim la vista i la inflem amb el fragment de maquina
-        View myview = inflater.inflate(R.layout.fragment_maquina, container, false);
+        myview = inflater.inflate(R.layout.fragment_maquina, container, false);
         demanarPermisos();
 
         deleteMaquina = (ImageView) myview.findViewById(R.id.imgdelete123);
@@ -454,7 +465,6 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
         aTiconMaquina = frag;
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
@@ -469,7 +479,6 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 // Carrego la linia del cursor de la posició.
                 Cursor linia = (Cursor) getItem(position);
                 aTiconMaquina.deleteMaquina(linia.getInt(linia.getColumnIndexOrThrow(BuidemDataSource.iD)), parent);
-
             }
         });
         botoEnviarMaps.setOnClickListener(new View.OnClickListener() {
@@ -530,7 +539,8 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
             email.setType("message/rfc822");
             aTiconMaquina.startActivity(Intent.createChooser(email, "Choose an Email client :"));
         } else {
-            Toast.makeText(context, "No hi ha e-mail al que enviar un correu!!", Toast.LENGTH_SHORT).show();
+            aTiconMaquina.missatgeSnackBar(v, "No hi ha e-mail al que enviar un correu!!", aTiconMaquina.colorVermell);
+
         }
     }
 
@@ -545,11 +555,10 @@ class adapterTodoIcon extends android.widget.SimpleCursorAdapter {
                 i.setData(Uri.parse("tel:" + tlfon));
                 aTiconMaquina.startActivity(i);
             } else {
-                Toast.makeText(context, "La longitud del telefon ha de ser de 9 digits!!", Toast.LENGTH_SHORT).show();
+                aTiconMaquina.missatgeSnackBar(v, "La longitud del telefon ha de ser de 9 digits!!", aTiconMaquina.colorVermell);
             }
         } else {
-            Toast.makeText(context, "No hi ha telèfon al que trucar!!", Toast.LENGTH_SHORT).show();
-
+            aTiconMaquina.missatgeSnackBar(v, "No hi ha telèfon al que trucar!!", aTiconMaquina.colorVermell);
         }
 
     }

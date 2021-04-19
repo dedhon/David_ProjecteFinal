@@ -35,6 +35,7 @@ import com.example.david_projectefinal.MaquinaaddClass;
 import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.TipusMaquina;
 import com.example.david_projectefinal.filtratge;
+import com.google.android.material.snackbar.Snackbar;
 import com.madrapps.pikolo.ColorPicker;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
@@ -44,7 +45,15 @@ import java.util.ArrayList;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class TipusFragment extends Fragment {
-    View vadapter;
+    Snackbar snackbar;
+    final String colorVermell = "#FF0000";
+    final String colorVerd = "#4BFE26";
+    public void missatgeSnackBar(View v, String missatge, String color) {
+        snackbar = Snackbar.make(v, missatge, Snackbar.LENGTH_SHORT);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(Color.parseColor(color));
+        snackbar.show();
+    }
     int mDefaultColor;
     String colorBDTipus = "";
     TextView tvColor;
@@ -62,11 +71,11 @@ public class TipusFragment extends Fragment {
     public static BuidemDataSource bd;
     ImageView addTipus;
     private filtratge filtreAplicat;
-
+    View root;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_tipus, container, false);
+        root = inflater.inflate(R.layout.fragment_tipus, container, false);
         addTipus = (ImageView) root.findViewById(R.id.imageAddTipus);
         bd = new BuidemDataSource(getContext());
         filtreAplicat = filtratge.FILTRE_TOT;
@@ -105,16 +114,17 @@ public class TipusFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 String nomTipus = etNomTip.getText().toString();
                 if (nomTipus.trim().equals("")) {
-                    Toast.makeText(getContext(), "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(root, "El nom és obligatori!!", colorVermell);
                     return;
                 } else {
                     boolean compNom = bd.mirarNomTipusRepe(nomTipus);
                     if (compNom == false) {
-                        Toast.makeText(getContext(), "El nom del tipus ja existeix!!", Toast.LENGTH_SHORT).show();
+                        missatgeSnackBar(root, "El nom del tipus ja existeix!!", colorVermell);
                         return;
                     }
                 }
                 bd.addTipus(nomTipus, colorBDTipus);
+                missatgeSnackBar(root, "El tipus s'ha creat correctament!!", colorVerd);
                 actualitzarTipus();
             }
         });
@@ -233,13 +243,16 @@ public class TipusFragment extends Fragment {
                 //Comprobem que el nom al ser obligatori, tingui algun contingut
                 String nom = etNom.getText().toString();
                 if (nom.trim().equals("")) {
-                    Toast.makeText(getContext(), "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(root, "El nom és obligatori!!", colorVermell);
                     return;
                 }
                 //Comprobem que el nom introduit no estigui repetit
                 boolean aux = bd.updateTipus(id, nom, colorBDTipus);
                 if (aux == true) {
-                    Toast.makeText(getContext(), "El nom del tipus ja existeix!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(root, "El nom del tipus ja existeix!!", colorVermell);
+                }
+                else{
+                    missatgeSnackBar(root, "El tipus s'ha actualitzat correctament!!", colorVerd);
                 }
                 actualitzarTipus();
             }
@@ -284,9 +297,10 @@ public class TipusFragment extends Fragment {
                     TipusFragment.bdEliminarTipus(idF);
                     filtreAplicat = filtratge.FILTRE_TOT;
                     actualitzarTipus();
+                    missatgeSnackBar(root, "El tipus s'ha eliminat correctament!!", colorVerd);
                 } else {
                     if (buscaEiliminar == true) {
-                        Toast.makeText(getContext(), "El tipus de màquina esta assignat, no pots eliminarlo!!", Toast.LENGTH_LONG).show();
+                        missatgeSnackBar(root, "El tipus de màquina esta assignat, no pots eliminarlo!!", colorVermell);
                     }
 
                 }

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +17,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.david_projectefinal.ui.tipus.TipusFragment;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,10 +32,11 @@ import java.util.Calendar;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class MaquinaaddClass extends AppCompatActivity {
+    final String colorVermell = "#FF0000";
     String dataFINAL = "";
     int contSemafor;
     public BuidemDataSource bd;
-    EditText etData;
+    TextView etData;
     EditText etNom;
     EditText etDir;
     EditText etCodiPos;
@@ -60,6 +63,7 @@ public class MaquinaaddClass extends AppCompatActivity {
     int mDefaultColor;
     String colorBDTipus = "";
     TextView tvColor;
+    Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,12 +258,12 @@ public class MaquinaaddClass extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String nomZona = etNomZona.getText().toString();
                 if (nomZona.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v2, "El nom es obligarori!!", colorVermell);
                     return;
                 } else {
                     boolean compNomZ = bd.mirarNomZonaRepe(nomZona);
                     if (compNomZ == false) {
-                        Toast.makeText(MaquinaaddClass.this, "El nom de la zona ja existeix!!", Toast.LENGTH_SHORT).show();
+                        missatgeSnackBar(v2, "El nom de la zona ja existeix!!", colorVermell);
                         return;
                     }
                 }
@@ -271,6 +275,13 @@ public class MaquinaaddClass extends AppCompatActivity {
         AlertDialog dialog = Zona.create();
         dialog.show();
 
+    }
+
+    public void missatgeSnackBar(View v, String missatge, String color) {
+        snackbar = Snackbar.make(v, missatge, Snackbar.LENGTH_SHORT);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(Color.parseColor(color));
+        snackbar.show();
     }
 
     public void editarAddMaquina(long id) {
@@ -299,55 +310,63 @@ public class MaquinaaddClass extends AppCompatActivity {
         etNumSer.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.numM)));
         etData.setText(updateMaquina.getString(updateMaquina.getColumnIndex(BuidemDataSource.dataM)));
 
-        etData.setEnabled(false);
+
         aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int codiConvert = 0;
                 String nom = etNom.getText().toString();
                 if (nom.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El nom es obligarori!!", colorVermell);
                     return;
                 }
                 String adreça = etDir.getText().toString();
                 if (adreça.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "L'adreça és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "L'adreça és obligatoria!!", colorVermell);
                     return;
                 }
                 String codiPos = etCodiPos.getText().toString();
 
                 if (codiPos.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "El codi postal és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El codi postal és obligatori!!", colorVermell);
                     return;
                 } else {
                     codiConvert = Integer.parseInt(codiPos);
                 }
                 String pob = etPobl.getText().toString();
                 if (pob.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "La població és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "La població és obligatoria!!", colorVermell);
                     return;
                 }
                 String tlf = etTlf.getText().toString();
+                if (tlf.length() != 9) {
+                    missatgeSnackBar(v, "La longitud del telefon no es correcte, 9 digits en total!!", colorVermell);
+                    return;
+                }
                 String email = etEmail.getText().toString();
+                if (!email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
+                    missatgeSnackBar(v, "No has introduit un email valid, torna a probar !!", colorVermell);
+                    return;
+                }
                 String numser = etNumSer.getText().toString();
                 if (numser.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "El número de serie és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El número de serie és obligatori!!", colorVermell);
                     return;
                 }
                 String data = etData.getText().toString();
                 String probaId = String.valueOf(idTipusFinal);
                 if (probaId.equals("0")) {
-                    Toast.makeText(MaquinaaddClass.this, "El tipus és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El tipus és obligatori!!", colorVermell);
                     return;
                 }
                 String probaIdZona = String.valueOf(idZonaFinal);
                 if (probaIdZona.equals("0")) {
-                    Toast.makeText(MaquinaaddClass.this, "La zona és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "La zona és obligatoria!!", colorVermell);
                     return;
                 }
                 boolean aux = bd.updateMaquina(id, nom, adreça, codiConvert, pob, tlf, email, numser, data, idTipusFinal, idZonaFinal);
                 if (aux == true) {
-                    Toast.makeText(MaquinaaddClass.this, "El número de serie ja existeix!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El número de serie ja existeix!!", colorVermell);
                 }
                 Intent mIntent = new Intent();
                 setResult(RESULT_OK, mIntent);
@@ -407,12 +426,12 @@ public class MaquinaaddClass extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String nomTipus = etNomTip.getText().toString();
                 if (nomTipus.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v2, "El nom es obligarori!!", colorVermell);
                     return;
                 } else {
                     boolean compNom = bd.mirarNomTipusRepe(nomTipus);
                     if (compNom == false) {
-                        Toast.makeText(MaquinaaddClass.this, "El nom del tipus ja existeix!!", Toast.LENGTH_SHORT).show();
+                        missatgeSnackBar(v2, "El nom del tipus ja existeix!!", colorVermell);
                         return;
                     }
                 }
@@ -436,61 +455,63 @@ public class MaquinaaddClass extends AppCompatActivity {
             }
         });
 
-
-        etData.setEnabled(false);
         aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int codiConvert = 0;
                 String nom = etNom.getText().toString();
                 if (nom.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El nom es obligarori!!", colorVermell);
                     return;
                 }
                 String adreça = etDir.getText().toString();
                 if (adreça.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "L'adreça és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "L'adreça és obligatoria!!", colorVermell);
                     return;
                 }
                 String codiPos = etCodiPos.getText().toString();
 
                 if (codiPos.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "El codi postal és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El codi postal és obligatori!!", colorVermell);
                     return;
                 } else {
                     codiConvert = Integer.parseInt(codiPos);
                 }
                 String pob = etPobl.getText().toString();
                 if (pob.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "La població és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "La població és obligatoria!!", colorVermell);
                     return;
                 }
                 String tlf = etTlf.getText().toString();
+                if (tlf.length() != 9) {
+                    missatgeSnackBar(v, "La longitud del telefon no es correcte, 9 digits en total!!", colorVermell);
+                    return;
+                }
                 String email = etEmail.getText().toString();
                 if (!email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
-                    Toast.makeText(MaquinaaddClass.this, "No has introduit un email valid, torna a probar ", Toast.LENGTH_LONG).show();
+                    missatgeSnackBar(v, "No has introduit un email valid, torna a probar !!", colorVermell);
                     return;
                 }
                 String numser = etNumSer.getText().toString();
                 if (numser.trim().equals("")) {
-                    Toast.makeText(MaquinaaddClass.this, "El número de serie és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El número de serie és obligatori!!", colorVermell);
                     return;
                 } else {
                     boolean compNum = bd.mirarNumSerieRepe(numser);
                     if (compNum == false) {
-                        Toast.makeText(MaquinaaddClass.this, "El número de serie ja existeix!!", Toast.LENGTH_SHORT).show();
+                        missatgeSnackBar(v, "El número de serie ja existeix!!", colorVermell);
                         return;
                     }
                 }
                 String data = etData.getText().toString();
                 String probaId = String.valueOf(idTipusFinal);
                 if (probaId.equals("0") || auxSemaforTipus == true) {
-                    Toast.makeText(MaquinaaddClass.this, "El tipus és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "El tipus és obligatori!!", colorVermell);
                     return;
                 }
                 String probaIdZona = String.valueOf(idZonaFinal);
                 if (probaIdZona.equals("0") || auxSemaforZona == true) {
-                    Toast.makeText(MaquinaaddClass.this, "La zona és obligatoria!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(v, "La zona és obligatoria!!", colorVermell);
                     return;
                 }
 
@@ -516,13 +537,13 @@ public class MaquinaaddClass extends AppCompatActivity {
         int any = cal.get(Calendar.YEAR);
         int mes = cal.get(Calendar.MONTH);
         int dia = cal.get(Calendar.DAY_OF_MONTH);
-        final EditText etData = findViewById(R.id.etData);
+        final TextView etData = findViewById(R.id.etData);
         DatePickerDialog dpd = new DatePickerDialog(MaquinaaddClass.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 int monthaux = month + 1;
                 dataFINAL = dayOfMonth + "-" + monthaux + "-" + year;
-                etData.setEnabled(false);
+
                 etData.setText(dataFINAL);
             }
         }, any, mes, dia);

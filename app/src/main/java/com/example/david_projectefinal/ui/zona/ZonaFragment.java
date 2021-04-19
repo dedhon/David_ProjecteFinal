@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import com.example.david_projectefinal.R;
 import com.example.david_projectefinal.filtratge;
 import com.example.david_projectefinal.ui.maps.maps;
 import com.example.david_projectefinal.ui.tipus.TipusFragment;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,15 @@ import java.util.ArrayList;
 public class ZonaFragment extends Fragment {
     public static BuidemDataSource bd;
     static String nom;
+    Snackbar snackbar;
+    final String colorVermell = "#FF0000";
+    final String colorVerd = "#4BFE26";
+    public void missatgeSnackBar(View v, String missatge, String color) {
+        snackbar = Snackbar.make(v, missatge, Snackbar.LENGTH_SHORT);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(Color.parseColor(color));
+        snackbar.show();
+    }
     String[] columnesZones = new String[]{
             BuidemDataSource.nomZ
     };
@@ -43,7 +54,7 @@ public class ZonaFragment extends Fragment {
             R.id.lblNomZona
     };
     ListView listView;
-
+    View root;
 
     public static adaptadorZona dataAdapter;
     private filtratge filtreAplicat;
@@ -81,7 +92,7 @@ public class ZonaFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_zona, container, false);
+        root = inflater.inflate(R.layout.fragment_zona, container, false);
 
         bd = new BuidemDataSource(getContext());
         filtreAplicat = filtratge.FILTRE_TOT;
@@ -105,18 +116,19 @@ public class ZonaFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 String nomZona = etNomZona.getText().toString();
                 if (nomZona.trim().equals("")) {
-                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(root, "El nom és obligatori!!", colorVermell);
                     return;
                 }
                 else{
                     boolean compNomZ = bd.mirarNomZonaRepe(nomZona);
                     if(compNomZ == false)
                     {
-                        Toast.makeText(getContext(), "El nom de la zona ja existeix!!", Toast.LENGTH_SHORT).show();
+                        missatgeSnackBar(root, "El nom de la zona ja existeix!!", colorVermell);
                         return;
                     }
                 }
                 bd.addZonas(nomZona);
+                missatgeSnackBar(root, "La zona s'ha creat correctament!!", colorVerd);
                 actualitzarZona();
 
             }
@@ -170,13 +182,16 @@ public class ZonaFragment extends Fragment {
 
                 String nom = etNom.getText().toString();
                 if (nom.trim().equals("")) {
-                    Toast.makeText(getContext(),"El nom és obligatori!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(root, "El nom és obligatori!!", colorVermell);
                     return;
                 }
                 boolean aux = bd.updateZones(id, nom);
                 if(aux==true)
                 {
-                    Toast.makeText(getContext(), "El nom de la zona ja existeix!!", Toast.LENGTH_SHORT).show();
+                    missatgeSnackBar(root, "El nom de la zona ja existeix!!", colorVermell);
+                }
+                else{
+                    missatgeSnackBar(root, "La zona s'ha actualitzat correctament!!", colorVerd);
                 }
 
                 actualitzarZona();
@@ -221,20 +236,18 @@ public class ZonaFragment extends Fragment {
                     ZonaFragment.bdEliminarZona(idF);
                     filtreAplicat = filtratge.FILTRE_TOT;
                     actualitzarZona();
+                    missatgeSnackBar(root, "La zona s'ha eliminat correctament!!", colorVerd);
                 }
                 else{
                     if(buscaEiliminar==true)
                     {
-                        Toast.makeText(getContext(),"La zona esta assignada, no pots eliminarla!!", Toast.LENGTH_LONG).show();
+                        missatgeSnackBar(root, "La zona esta assignada, no pots eliminarla!!", colorVermell);
                     }
-
                 }
-
             }
         });
         alertadd.setNegativeButton("No", null);
         alertadd.show();
-
     }
 }
 class adaptadorZona extends android.widget.SimpleCursorAdapter {

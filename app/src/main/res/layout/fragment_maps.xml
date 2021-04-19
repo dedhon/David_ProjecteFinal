@@ -6,14 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".ui.maps.maps">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/map44"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="415dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.maps.maps"
-        tools:layout_editor_absoluteX="-2dp"
-        tools:layout_editor_absoluteY="4dp"
-        tools:ignore="MissingConstraints" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="432dp"
+            android:background="#FFFFFF"
+            android:orientation="horizontal">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/map44"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="417dp"
+                android:layout_height="match_parent"
+                tools:context=".ui.maps.maps"
+                tools:ignore="MissingConstraints">
+
+            </androidx.fragment.app.FragmentContainerView>
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="horizontal">
+
+        <ListView
+            android:id="@id/list2"
+            android:layout_width="413dp"
+            android:layout_height="match_parent"
+            tools:ignore="MissingConstraints">
+
+        </ListView>
+    </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
